@@ -1,0 +1,21 @@
+{
+  "name": "chat-live-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "clancysong",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon --watch 'src/***/*' -e ts,tsx --exec 'ts-node' src/index.ts"
+  },
+  "dependencies": {
+    "koa": "^2.7.0",
+    "koa-router": "^7.4.0"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.0.48",
+    "@types/koa-router": "^7.0.39",
+    "nodemon": "^1.18.10",
+    "ts-node": "^8.0.2",
+    "typescript": "^3.3.3"
+  }
+}

@@ -9,11 +9,15 @@
   },
   "dependencies": {
     "koa": "^2.7.0",
-    "koa-router": "^7.4.0"
+    "koa-compose": "^4.1.0",
+    "koa-router": "^7.4.0",
+    "koa-websocket": "^5.0.1"
   },
   "devDependencies": {
     "@types/koa": "^2.0.48",
+    "@types/koa-compose": "^3.2.3",
     "@types/koa-router": "^7.0.39",
+    "@types/koa-websocket": "^5.0.3",
     "nodemon": "^1.18.10",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.3"

@@ -1,15 +1,15 @@
 import Koa from 'koa'
-import Router from 'koa-router'
+import compose from 'koa-compose'
+import websocket from 'koa-websocket'
+import routes from './routes'
+import wsRoute from './ws'
 
-const app = new Koa()
-const router = new Router()
+const app = websocket(new Koa())
 
-router.get('/*', async (ctx: any) => {
-  ctx.body = 'Hi TS'
-})
+const middleware = compose([routes])
 
-app.use(router.routes())
+app.use(middleware)
 
-app.listen(8080)
+app.ws.use(wsRoute)
 
-console.log('Server is running on http://localhost:8080')
+app.listen(10000)

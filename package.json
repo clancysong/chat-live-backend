@@ -5,13 +5,12 @@
   "author": "clancysong",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon --watch 'src/***/*' -e ts,tsx --exec 'ts-node' src/index.ts"
+    "start": "nodemon --watch 'src/*' -e ts,tsx --exec 'ts-node' src/index.ts"
   },
   "dependencies": {
     "koa": "^2.7.0",
     "koa-compose": "^4.1.0",
-    "koa-router": "^7.4.0",
-    "koa-websocket": "^5.0.1"
+    "koa-router": "^7.4.0"
   },
   "devDependencies": {
     "@types/koa": "^2.0.48",
@@ -20,6 +19,7 @@
     "@types/koa-websocket": "^5.0.3",
     "nodemon": "^1.18.10",
     "ts-node": "^8.0.2",
+    "tslint": "^5.12.1",
     "typescript": "^3.3.3"
   }
 }

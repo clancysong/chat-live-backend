@@ -9,15 +9,18 @@ interface PlayerInfo {
 const playersInfo: PlayerInfo[] = []
 
 const EVENT_TYPE = {
-  OTHER_PLAYERS: 'other players',
-  NEW_PLAYER: 'new player',
+  INIT_OTHER_PLAYERS: 'init other players',
+  CREATE_PLAYER: 'create player',
   PLAYER_MOVEMENT: 'player movement',
+  ADD_OTHER_PLAYER: 'add other player',
   REMOVE_PLAYER: 'remove player'
 }
 
+const generateId = () => `player-${new Date().getTime()}`
+
 const updatePlayerInfo = (playerInfo: PlayerInfo) => {
-  playersInfo.forEach(item => {
-    if (item.id === playerInfo.id) item = playerInfo
+  playersInfo.forEach((item, index) => {
+    if (item.id === playerInfo.id) playersInfo[index] = playerInfo
   })
 }
 
@@ -27,6 +30,8 @@ const removePlayerInfo = (playerInfo: PlayerInfo) => {
 
 const bindEvents = (wss: Server) => {
   wss.on('connection', function connection(ws) {
+    const sendMessage = (type: string, body: any) => ws.send(JSON.stringify({ type, body }))
+
     const broadcast = (type: string, body: any) => {
       wss.clients.forEach(client => {
         if (client !== ws) {
@@ -35,20 +40,18 @@ const bindEvents = (wss: Server) => {
       })
     }
 
-    ws.send(JSON.stringify({ type: EVENT_TYPE.OTHER_PLAYERS, body: playersInfo }))
+    const newPlayerInfo = { id: generateId(), x: 500, y: 400 }
+
+    sendMessage(EVENT_TYPE.CREATE_PLAYER, newPlayerInfo)
+    sendMessage(EVENT_TYPE.INIT_OTHER_PLAYERS, playersInfo)
+    broadcast(EVENT_TYPE.ADD_OTHER_PLAYER, newPlayerInfo)
+
+    playersInfo.push(newPlayerInfo)
 
     ws.on('message', (message: string) => {
       const data = JSON.parse(message)
 
-      console.log(data.type)
-
       switch (data.type) {
-        case EVENT_TYPE.NEW_PLAYER: {
-          playersInfo.push(data.body)
-          broadcast(EVENT_TYPE.NEW_PLAYER, data.body)
-          break
-        }
-
         case EVENT_TYPE.PLAYER_MOVEMENT: {
           updatePlayerInfo(data.body)
           broadcast(EVENT_TYPE.PLAYER_MOVEMENT, data.body)

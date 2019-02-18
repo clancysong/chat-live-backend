@@ -3,7 +3,7 @@ import compose from 'koa-compose'
 import { Server as HttpServer } from 'http'
 import { Server as WebSocketServer } from 'ws'
 import routes from './routes'
-import bindWebSocketEvents from './ws'
+import createSockets from './sockets'
 
 const app = new Koa()
 const server = new HttpServer(app.callback())
@@ -13,6 +13,6 @@ const middleware = compose([routes])
 
 app.use(middleware)
 
-bindWebSocketEvents(wss)
+createSockets(wss)
 
 server.listen(10000)

@@ -6,15 +6,15 @@ interface PlayerInfo {
   y: number
 }
 
-class PlayerSocket {
-  private EVENT_TYPE = {
-    INIT_OTHER_PLAYERS: 'init other players',
-    CREATE_PLAYER: 'create player',
-    PLAYER_MOVEMENT: 'player movement',
-    ADD_OTHER_PLAYER: 'add other player',
-    REMOVE_PLAYER: 'remove player'
-  }
+enum EVENT_TYPE {
+  INIT_OTHER_PLAYERS = 'init other players',
+  CREATE_PLAYER = 'create player',
+  PLAYER_MOVEMENT = 'player movement',
+  ADD_OTHER_PLAYER = 'add other player',
+  REMOVE_PLAYER = 'remove player'
+}
 
+class PlayerSocket {
   private wss: WebSocketServer
   private playersInfo: PlayerInfo[] = []
 
@@ -38,9 +38,9 @@ class PlayerSocket {
   private bindEvents = () => {
     const _this = this
     _this.wss.on('connection', function connection(ws) {
-      const sendMessage = (type: string, body: any) => ws.send(JSON.stringify({ type, body }))
+      const sendMessage = (type: EVENT_TYPE, body: any) => ws.send(JSON.stringify({ type, body }))
 
-      const broadcast = (type: string, body: any) => {
+      const broadcast = (type: EVENT_TYPE, body: any) => {
         _this.wss.clients.forEach(client => {
           if (client !== ws) {
             client.send(JSON.stringify({ type, body }))
@@ -50,9 +50,9 @@ class PlayerSocket {
 
       const newPlayerInfo = { id: _this.generateId(), x: 500, y: 400 }
 
-      sendMessage(_this.EVENT_TYPE.CREATE_PLAYER, newPlayerInfo)
-      sendMessage(_this.EVENT_TYPE.INIT_OTHER_PLAYERS, _this.playersInfo)
-      broadcast(_this.EVENT_TYPE.ADD_OTHER_PLAYER, newPlayerInfo)
+      sendMessage(EVENT_TYPE.CREATE_PLAYER, newPlayerInfo)
+      sendMessage(EVENT_TYPE.INIT_OTHER_PLAYERS, _this.playersInfo)
+      broadcast(EVENT_TYPE.ADD_OTHER_PLAYER, newPlayerInfo)
 
       _this.playersInfo.push(newPlayerInfo)
 
@@ -60,15 +60,15 @@ class PlayerSocket {
         const data = JSON.parse(message)
 
         switch (data.type) {
-          case _this.EVENT_TYPE.PLAYER_MOVEMENT: {
+          case EVENT_TYPE.PLAYER_MOVEMENT: {
             _this.updatePlayerInfo(data.body)
-            broadcast(_this.EVENT_TYPE.PLAYER_MOVEMENT, data.body)
+            broadcast(EVENT_TYPE.PLAYER_MOVEMENT, data.body)
             break
           }
 
-          case _this.EVENT_TYPE.REMOVE_PLAYER: {
+          case EVENT_TYPE.REMOVE_PLAYER: {
             _this.removePlayerInfo(data.body)
-            broadcast(_this.EVENT_TYPE.REMOVE_PLAYER, data.body)
+            broadcast(EVENT_TYPE.REMOVE_PLAYER, data.body)
             break
           }
 

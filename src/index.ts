@@ -16,3 +16,5 @@ app.use(middleware)
 createSockets(wss)
 
 server.listen(10000)
+
+export default server

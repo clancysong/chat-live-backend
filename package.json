@@ -5,8 +5,14 @@
   "author": "clancysong",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon --watch 'src/*' -e ts,tsx --exec ts-node src/index.ts",
-    "test": "mocha -r ts-node/register test/**.test.ts"
+    "serve": "nodemon --watch 'src/*' -e ts,tsx --exec ts-node src/index.ts",
+    "test": "mocha -r ts-node/register test/**.test.ts",
+    "setup": "psql -f src/db/sql/setup.psql",
+    "migrate": "knex --knexfile knexfile.ts migrate:latest",
+    "migrate:rb": "knex --knexfile knexfile.ts migrate:rollback",
+    "migrate:mk": "knex --knexfile knexfile.ts migrate:make -x ts",
+    "seed": "knex --knexfile knexfile.ts seed:run",
+    "seed:mk": "knex --knexfile knexfile.ts seed:make -x ts"
   },
   "dependencies": {
     "knex": "^0.16.3",

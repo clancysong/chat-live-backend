@@ -1,0 +1,6 @@
+create database chat_live;
+create database chat_live_test;
+
+create user chat_live_guard with encrypted password 'cl';
+grant all privileges on database chat_live to chat_live_guard;
+grant all privileges on database chat_live_test to chat_live_guard;

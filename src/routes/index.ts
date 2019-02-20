@@ -1,15 +1,8 @@
 import Router from 'koa-router'
-import userRouter from './user'
+import v1Router from './v1'
 
 const router = new Router()
 
-router.use(userRouter.routes(), userRouter.allowedMethods())
-
-router.get('/', async ctx => {
-  ctx.body = {
-    status: 'success',
-    data: 'Hi TS'
-  }
-})
+router.use(v1Router.routes(), v1Router.allowedMethods())
 
 export default router

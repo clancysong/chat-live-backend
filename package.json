@@ -17,9 +17,10 @@
   "dependencies": {
     "knex": "^0.16.3",
     "koa": "^2.7.0",
-    "koa-bodyparser": "^4.2.1",
+    "koa-body": "^4.0.8",
     "koa-compose": "^4.1.0",
     "koa-router": "^7.4.0",
+    "koa-session": "^5.10.1",
     "pg": "^7.8.0",
     "ws": "^6.1.4"
   },
@@ -31,6 +32,7 @@
     "@types/koa-bodyparser": "^4.2.2",
     "@types/koa-compose": "^3.2.3",
     "@types/koa-router": "^7.0.39",
+    "@types/koa-session": "^5.10.0",
     "@types/koa-websocket": "^5.0.3",
     "@types/mocha": "^5.2.6",
     "chai": "^4.2.0",

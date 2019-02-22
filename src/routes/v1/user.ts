@@ -2,11 +2,11 @@ import Router from 'koa-router'
 import queries from '../../db/queries/user'
 import resBody from '../../utils/resBody'
 
-const router = new Router()
+const router = new Router({ prefix: '/user' })
 
-const URL = '/api/v1/user'
+router.get('/:id', async ctx => {
+  console.log(ctx.session.user)
 
-router.get(`${URL}/:id`, async ctx => {
   const rs = await queries.getUserById(ctx.params.id)
 
   if (rs.length) ctx.body = resBody.data(rs)
@@ -14,7 +14,7 @@ router.get(`${URL}/:id`, async ctx => {
 })
 
 
-router.post(URL, async ctx => {
+router.post('/', async ctx => {
   const reqBody = ctx.request.body
 
   const rs = await queries.getUserForName(reqBody.name)

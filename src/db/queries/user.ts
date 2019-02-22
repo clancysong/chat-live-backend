@@ -7,7 +7,7 @@ class UserQuery extends Query {
 
   public findById = (id: number) => this.findOne({ id })
 
-  public findByName = (name: string) => this.findOne({ name })
+  public findByName = (username: string) => this.findOne({ username })
 }
 
 export default new UserQuery()

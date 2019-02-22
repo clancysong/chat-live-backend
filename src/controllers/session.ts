@@ -3,14 +3,13 @@ import response from '../utils/response'
 import passport from '../utils/passport'
 
 class SessionController {
-  public async login(ctx: Context, next: () => Promise<any>) {
-    return passport.authenticate('local', (err, user, info, status) => {
-      console.log(user)
+  public login(ctx: Context, next: () => Promise<any>) {
+    return passport.authenticate('local', async (err, user, info, status) => {
       if (user) {
-        response.message(ctx, 'Login succeed')
-        return ctx.login(user)
+        await ctx.login(user)
+        response.message(ctx, info.message)
       } else {
-        response.error(ctx, 'Login failed')
+        response.error(ctx, info.message)
       }
     })(ctx, next)
   }

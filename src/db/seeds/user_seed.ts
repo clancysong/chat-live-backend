@@ -5,9 +5,9 @@ exports.seed = (knex: Knex) => {
     .del()
     .then(() => {
       return knex('user').insert([
-        { name: 'user1', password: 'uu' },
-        { name: 'user2', password: 'uu' },
-        { name: 'user3', password: 'uu' }
+        { username: 'user1', password: 'uu' },
+        { username: 'user2', password: 'uu' },
+        { username: 'user3', password: 'uu' }
       ])
     })
 }

@@ -12,13 +12,11 @@ class Query {
     this.connection = knex(tableName)
   }
 
-  public findOne = async (opts: {}) => {
-    console.log(opts)
-    const rs = await this.connection.select('*').where(opts)
-    console.log(rs)
-    if (rs && rs.length) return rs[0]
-    else return false
-  }
+  public findOne = async (opts: {}) =>
+    await this.connection
+      .select('*')
+      .where(opts)
+      .first()
 
   public addOne = (info: {}) => this.connection.insert(info)
 }

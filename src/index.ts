@@ -9,17 +9,23 @@ import createSockets from './sockets'
 
 const app = new Koa()
 const server = new HttpServer(app.callback())
-const wss = new WebSocketServer({ server })
 
+// session
 app.keys = ['sercet']
-app.use(session(app))
+app.use(session({ key: 'sercet '}, app))
 
+// body parser
+app.use(bodyParser({ multipart: true }))
+
+// passport
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use(bodyParser({ multipart: true }))
+// router
 app.use(router.routes())
 
+// websocket
+const wss = new WebSocketServer({ server })
 createSockets(wss)
 
 server.listen(5000)

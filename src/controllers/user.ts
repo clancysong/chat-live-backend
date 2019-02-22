@@ -3,9 +3,7 @@ import userQuery from '../db/queries/user'
 import response from '../utils/response'
 
 class UserController {
-  public async getUserById(ctx: Context, n: any) {
-    console.log(ctx.isAuthenticated())
-    console.log(n)
+  public async getUserById(ctx: Context) {
     const user = await userQuery.findById(ctx.params.id)
     if (user) response.data(ctx, user)
     else response.error(ctx, 'The user does not exits')

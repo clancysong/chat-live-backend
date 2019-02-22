@@ -4,7 +4,7 @@ import userRouter from './user'
 
 const router = new Router({ prefix: '/v1' })
 
-router.use(sessionRouter.routes(), sessionRouter.allowedMethods())
-router.use(userRouter.routes(), userRouter.allowedMethods())
+router.use(sessionRouter.routes())
+router.use(userRouter.routes())
 
 export default router

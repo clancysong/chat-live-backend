@@ -1,14 +1,13 @@
-import knex from '../connection'
+import Query, { TABLE_NAME } from './Query'
 
-interface UserInfo {
-  name: string
-  password: string
+class UserQuery extends Query {
+  constructor() {
+    super(TABLE_NAME.USER)
+  }
+
+  public findById = (id: number) => this.findOne({ id })
+
+  public findByName = (name: string) => this.findOne({ name })
 }
 
-const connection = knex('user')
-
-export default {
-  getUserById: (id: number) => connection.select('*').where({ id }),
-  getUserForName: (name: string) => connection.select('*').where({ name }),
-  addUser: (userInfo: UserInfo) => connection.insert(userInfo)
-}
+export default new UserQuery()

@@ -1,6 +1,6 @@
 import Router from 'koa-router'
 import queries from '../../db/queries/user'
-import resBody from '../../utils/resBody'
+import response from '../../utils/response'
 
 const router = new Router({ prefix: '/session' })
 
@@ -10,19 +10,19 @@ router.post('/', async ctx => {
 
   if (rs.length) {
     if (reqBody.password === rs[0].password) {
-      ctx.body = resBody.message('Login successful')
+      response.message(ctx, 'Login successful')
       ctx.session.user = rs[0]
     } else {
-      ctx.body = resBody.error('The password is incorrect')
+      response.error(ctx, 'The password is incorrect')
     }
   } else {
-    ctx.body = resBody.error('The user does not exist')
+    response.error(ctx, 'The user does not exist')
   }
 })
 
 router.del('/', async ctx => {
   delete ctx.session.user
-  ctx.body = resBody.message('Logout successful')
+  response.message(ctx, 'Logout successful')
 })
 
 export default router

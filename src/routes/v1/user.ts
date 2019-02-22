@@ -1,6 +1,6 @@
 import Router from 'koa-router'
 import queries from '../../db/queries/user'
-import resBody from '../../utils/resBody'
+import response from '../../utils/response'
 
 const router = new Router({ prefix: '/user' })
 
@@ -9,10 +9,12 @@ router.get('/:id', async ctx => {
 
   const rs = await queries.getUserById(ctx.params.id)
 
-  if (rs.length) ctx.body = resBody.data(rs)
-  else ctx.body = resBody.error('The user does not exist')
+  if (rs.length) {
+    response.data(ctx, rs[0])
+  } else {
+    response.error(ctx, 'The user does not exist')
+  }
 })
-
 
 router.post('/', async ctx => {
   const reqBody = ctx.request.body
@@ -20,9 +22,9 @@ router.post('/', async ctx => {
   const rs = await queries.getUserForName(reqBody.name)
 
   if (rs.length) {
-    ctx.body = resBody.error('The name already exists')
+    response.error(ctx, 'The name already exists')
   } else {
-    ctx.body = resBody.message('User added successfully')
+    response.message(ctx, 'User added successfully')
   }
 })
 

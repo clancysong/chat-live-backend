@@ -16,5 +16,8 @@ export default {
     } else {
       return undefined
     }
+  },
+  isAuthenticated(ctx: Context) {
+    return ctx.session.user ? true : false
   }
 }

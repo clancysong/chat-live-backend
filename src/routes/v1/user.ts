@@ -1,10 +1,10 @@
 import Router from 'koa-router'
-import ctrl from '../../controllers/user'
+import controller from '../../controllers/user'
 
 const router = new Router({ prefix: '/user' })
 
-router.get('/:id', ctrl.getUserById)
+router.get('/:id', controller.getUserById)
 
-router.post('/', ctrl.addUser)
+router.post('/', controller.addUser)
 
 export default router

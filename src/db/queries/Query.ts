@@ -12,13 +12,16 @@ class Query {
     this.connection = knex(tableName)
   }
 
-  public findOne = async (opts: {}) =>
-    await this.connection
-      .select('*')
-      .where(opts)
-      .first()
+  public findOne = async (opts: {}) => {
+    const rs = await this.connection.select('*').where(opts)
+    if (rs.length > 0) return rs[0]
+    return undefined
+  }
 
-  public addOne = (info: {}) => this.connection.insert(info)
+  public addOne = async (info: {}) => {
+    const rs = await this.connection.insert(info).returning('id')
+    return rs[0]
+  }
 }
 
 export default Query

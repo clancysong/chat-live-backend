@@ -3,7 +3,6 @@ import { Server as HttpServer } from 'http'
 import { Server as WebSocketServer } from 'ws'
 import bodyParser from 'koa-body'
 import session from 'koa-session'
-import passport from './utils/passport'
 import router from './routes'
 import createSockets from './sockets'
 
@@ -11,15 +10,11 @@ const app = new Koa()
 const server = new HttpServer(app.callback())
 
 // session
-app.keys = ['sercet']
-app.use(session({ key: 'sercet '}, app))
+app.keys = ['sercet', 'new sercet']
+app.use(session({ key: 'sercet', maxAge: 7200000 }, app))
 
 // body parser
 app.use(bodyParser({ multipart: true }))
-
-// passport
-app.use(passport.initialize())
-app.use(passport.session())
 
 // router
 app.use(router.routes())

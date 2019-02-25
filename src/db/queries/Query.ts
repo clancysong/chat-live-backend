@@ -6,20 +6,20 @@ enum TABLE_NAME {
 }
 
 class Query {
-  private connection: QueryBuilder
+  private connect: () => QueryBuilder
 
   constructor(tableName: TABLE_NAME) {
-    this.connection = knex(tableName)
+    this.connect = () => knex(tableName)
   }
 
   public findOne = async (opts: {}) => {
-    const rs = await this.connection.select('*').where(opts)
+    const rs = await this.connect().select('*').where(opts)
     if (rs.length > 0) return rs[0]
     return undefined
   }
 
   public addOne = async (info: {}) => {
-    const rs = await this.connection.insert(info).returning('id')
+    const rs = await this.connect().insert(info).returning('id')
     return rs[0]
   }
 }

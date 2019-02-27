@@ -5,8 +5,8 @@ import response from '../utils/response'
 
 class AuthController {
   public async login(ctx: Context) {
-    const { username, password } = ctx.request.body
-    const user = await userQuery.findByName(username)
+    const { email, password } = ctx.request.body
+    const user = await userQuery.findOne({ email })
 
     if (user) {
       if (user.password === password) {
@@ -21,11 +21,11 @@ class AuthController {
   }
 
   public async register(ctx: Context) {
-    const { username, password } = ctx.request.body
-    const user = await userQuery.findByName(username)
+    const { name, email,  password } = ctx.request.body
+    const user = await userQuery.findByName(email)
 
     if (!user) {
-      const id = await userQuery.addOne({ username, password })
+      const id = await userQuery.addOne({ name, email, password })
       session.save(ctx, id)
       response.message(ctx, 'Registered successfully')
     } else {

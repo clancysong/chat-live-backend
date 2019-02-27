@@ -8,7 +8,7 @@ const router = new Router({ prefix: '/v1' })
 
 router.use('/*', async (ctx, next) => {
   const isPathAllowed = () => {
-    const allowedPaths = ['/api/v1/auth/login', '/api/v1/auth/register']
+    const allowedPaths = ['/api/v1/login', '/api/v1/register']
     return allowedPaths.some(path => ctx.path === path)
   }
 

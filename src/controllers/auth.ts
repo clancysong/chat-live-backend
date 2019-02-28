@@ -4,6 +4,11 @@ import session from '../utils/session'
 import response from '../utils/response'
 
 class AuthController {
+  public async auth(ctx: Context) {
+    if (session.isAuthenticated(ctx)) response.success(ctx)
+    else response.error(ctx, 'Authentication failed', 401)
+  }
+
   public async login(ctx: Context) {
     const { email, password } = ctx.request.body
     const user = await userQuery.findOne({ email })
@@ -11,7 +16,7 @@ class AuthController {
     if (user) {
       if (user.password === password) {
         session.save(ctx, user.id)
-        response.message(ctx, 'Logged in successfully')
+        response.success(ctx)
       } else {
         response.error(ctx, 'The password is incorrect')
       }
@@ -21,13 +26,13 @@ class AuthController {
   }
 
   public async register(ctx: Context) {
-    const { name, email,  password } = ctx.request.body
-    const user = await userQuery.findByName(email)
+    const { name, email, password } = ctx.request.body
+    const user = await userQuery.findOne({ email })
 
     if (!user) {
       const id = await userQuery.addOne({ name, email, password })
       session.save(ctx, id)
-      response.message(ctx, 'Registered successfully')
+      response.success(ctx)
     } else {
       response.error(ctx, 'The name already exists')
     }
@@ -35,7 +40,7 @@ class AuthController {
 
   public logout(ctx: Context) {
     session.remove(ctx)
-    response.message(ctx, 'Logout successful')
+    response.success(ctx)
   }
 }
 

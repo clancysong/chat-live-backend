@@ -1,10 +1,9 @@
 import Koa from 'koa'
 import { Server as HttpServer } from 'http'
-import { Server as WebSocketServer } from 'ws'
+import SocketIO from 'socket.io'
 import bodyParser from 'koa-body'
 import session from 'koa-session'
 import router from './routes'
-import createSockets from './sockets'
 
 const app = new Koa()
 const server = new HttpServer(app.callback())
@@ -19,9 +18,13 @@ app.use(bodyParser({ multipart: true }))
 // router
 app.use(router.routes())
 
-// websocket
-const wss = new WebSocketServer({ server })
-createSockets(wss)
+// socket.io
+const io = SocketIO(server)
+io.on('connection', socket => {
+  socket.on('test', data => {
+    console.log(data)
+  })
+})
 
 server.listen(5000)
 

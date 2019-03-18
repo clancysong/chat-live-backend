@@ -4,9 +4,13 @@ import session from '../utils/session'
 import response from '../utils/response'
 
 class AuthController {
-  public async auth(ctx: Context) {
-    if (session.isAuthenticated(ctx)) response.success(ctx)
-    else response.error(ctx, 'Authentication failed', 401)
+  public async authorize(ctx: Context) {
+    if (session.isAuthenticated(ctx)) {
+      const user = await session.fetch(ctx)
+      response.success(ctx, user)
+    } else {
+      response.error(ctx, 'Authentication failed', 401)
+    }
   }
 
   public async login(ctx: Context) {

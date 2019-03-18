@@ -3,7 +3,7 @@ import controller from '../../controllers/auth'
 
 const router = new Router()
 
-router.get('/auth', controller.auth)
+router.get('/authorize', controller.authorize)
 
 router.post('/login', controller.login)
 

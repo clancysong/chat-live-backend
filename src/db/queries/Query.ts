@@ -2,7 +2,8 @@ import { QueryBuilder } from 'knex'
 import knex from '../connection'
 
 enum TABLE_NAME {
-  USER = 'user'
+  USER = 'user',
+  GROUP = 'group'
 }
 
 class Query {
@@ -12,9 +13,9 @@ class Query {
     this.connect = () => knex(tableName)
   }
 
-  public findOne = (id: number) => this.connect().where({ id })
+  public findOne = (id: number) => this.connect().where({ id }).first()
 
-  public findAll = (opts: {}) => this.connect().where(opts)
+  public findAll = (opts: {} = {}) => this.connect().where(opts)
 
   public addOne = (newOne: {}) =>
     this.connect()

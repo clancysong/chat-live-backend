@@ -5,7 +5,7 @@ class UserQuery extends Query {
     super(TABLE_NAME.USER)
   }
 
-  public findByEmail = (email: string) => this.findAll({ email })
+  public findByEmail = (email: string) => this.findAll({ email }).first()
 }
 
 export default new UserQuery()

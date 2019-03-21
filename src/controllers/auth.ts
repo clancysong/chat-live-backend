@@ -5,21 +5,15 @@ import response from '../utils/response'
 
 class AuthController {
   public async authorize(ctx: Context) {
-    if (session.isAuthenticated(ctx)) {
-      const user = await session.fetch(ctx)
-      response.success(ctx, user)
-    } else {
-      response.error(ctx, 'Authentication failed', 401)
-    }
+    const user = await session.fetch(ctx)
+    response.success(ctx, user)
   }
 
   public async login(ctx: Context) {
     const { email, password } = ctx.request.body
-    const rs = await userQuery.findByEmail(email)
+    const user = await userQuery.findByEmail(email)
 
-    if (rs.length > 0) {
-      const user = rs[0]
-
+    if (user) {
       if (user.password === password) {
         session.save(ctx, user.id)
         response.success(ctx, user)
@@ -33,12 +27,12 @@ class AuthController {
 
   public async register(ctx: Context) {
     const { name, email, password } = ctx.request.body
-    const rs = await userQuery.findByEmail(email)
+    const existUser = await userQuery.findByEmail(email)
 
-    if (rs.length === 0) {
+    if (!existUser) {
       const user = await userQuery.addOne({ name, email, password })
 
-      session.save(ctx, user)
+      session.save(ctx, user.id)
       response.success(ctx, user)
     } else {
       response.error(ctx, 'The name already exists')

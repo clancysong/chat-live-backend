@@ -3,6 +3,7 @@ import { Server as HttpServer } from 'http'
 import bodyParser from 'koa-body'
 import session from 'koa-session'
 import router from './routes'
+import errorHandler from './middlewares/error-handler'
 import createSocket from './ws'
 
 const app = new Koa()
@@ -17,6 +18,9 @@ app.use(bodyParser({ multipart: true }))
 
 // router
 app.use(router.routes())
+
+// error handler
+app.use(errorHandler)
 
 // socket.io
 createSocket(server)

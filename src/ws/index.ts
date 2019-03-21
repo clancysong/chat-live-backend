@@ -8,12 +8,6 @@ class Ws {
     this.io = SocketIO(server)
 
     this.io.on('connection', socket => {
-      console.log('新用户加入')
-
-      socket.on('disconnect', () => {
-        console.log('断开连接')
-      })
-
       socket.on('test', (data: any) => {
         console.log(data)
       })

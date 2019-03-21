@@ -20,7 +20,7 @@ class AuthController {
     if (user) {
       if (user.password === password) {
         session.save(ctx, user.id)
-        response.success(ctx)
+        response.success(ctx, user)
       } else {
         response.error(ctx, 'The password is incorrect')
       }
@@ -36,7 +36,7 @@ class AuthController {
     if (!user) {
       const id = await userQuery.addOne({ name, email, password })
       session.save(ctx, id)
-      response.success(ctx)
+      response.success(ctx, user)
     } else {
       response.error(ctx, 'The name already exists')
     }

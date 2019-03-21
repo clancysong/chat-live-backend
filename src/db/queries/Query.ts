@@ -12,16 +12,26 @@ class Query {
     this.connect = () => knex(tableName)
   }
 
-  public findOne = async (opts: {}) => {
-    const rs = await this.connect().select('*').where(opts)
-    if (rs.length > 0) return rs[0]
-    return undefined
-  }
+  public findOne = (id: number) => this.connect().where({ id })
 
-  public addOne = async (info: {}) => {
-    const rs = await this.connect().insert(info).returning('id')
-    return rs[0]
-  }
+  public findAll = (opts: {}) => this.connect().where(opts)
+
+  public addOne = (newOne: {}) =>
+    this.connect()
+      .insert(newOne)
+      .returning('*')
+
+  public removeOne = (id: number) =>
+    this.connect()
+      .delete()
+      .where({ id })
+      .returning('*')
+
+  public updateOne = (id: number, newOne: {}) =>
+    this.connect()
+      .update(newOne)
+      .where({ id })
+      .returning('*')
 }
 
 export default Query

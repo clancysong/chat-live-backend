@@ -11,7 +11,7 @@ export default {
   async fetch(ctx: Context) {
     if (ctx.session.user) {
       const { id } = ctx.session.user
-      const user = await userQuery.findById(id)
+      const user = await userQuery.findOne(id)
       return user
     } else {
       return undefined

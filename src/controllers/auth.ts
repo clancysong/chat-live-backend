@@ -15,9 +15,11 @@ class AuthController {
 
   public async login(ctx: Context) {
     const { email, password } = ctx.request.body
-    const user = await userQuery.findOne({ email })
+    const rs = await userQuery.findByEmail(email)
 
-    if (user) {
+    if (rs.length > 0) {
+      const user = rs[0]
+
       if (user.password === password) {
         session.save(ctx, user.id)
         response.success(ctx, user)
@@ -31,11 +33,12 @@ class AuthController {
 
   public async register(ctx: Context) {
     const { name, email, password } = ctx.request.body
-    const user = await userQuery.findOne({ email })
+    const rs = await userQuery.findByEmail(email)
 
-    if (!user) {
-      const id = await userQuery.addOne({ name, email, password })
-      session.save(ctx, id)
+    if (rs.length === 0) {
+      const user = await userQuery.addOne({ name, email, password })
+
+      session.save(ctx, user)
       response.success(ctx, user)
     } else {
       response.error(ctx, 'The name already exists')

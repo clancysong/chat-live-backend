@@ -5,9 +5,7 @@ class UserQuery extends Query {
     super(TABLE_NAME.USER)
   }
 
-  public findById = (id: number) => this.findOne({ id })
-
-  public findByName = (username: string) => this.findOne({ username })
+  public findByEmail = (email: string) => this.findAll({ email })
 }
 
 export default new UserQuery()

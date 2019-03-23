@@ -1,6 +1,7 @@
 import Router from 'koa-router'
 import authRouter from './auth'
 import userRouter from './user'
+import groupRouter from './group'
 import response from '../../utils/response'
 import session from '../../utils/session'
 
@@ -18,5 +19,6 @@ router.use('/*', async (ctx, next) => {
 
 router.use(authRouter.routes())
 router.use(userRouter.routes())
+router.use(groupRouter.routes())
 
 export default router

@@ -3,11 +3,12 @@ import knex from '../connection'
 
 enum TABLE_NAME {
   USER = 'user',
-  GROUP = 'group'
+  GROUP = 'group',
+  MESSAGE = 'message'
 }
 
 class Query {
-  private connect: () => QueryBuilder
+  protected connect: () => QueryBuilder
 
   constructor(tableName: TABLE_NAME) {
     this.connect = () => knex(tableName)

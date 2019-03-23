@@ -2,6 +2,9 @@ import { ParameterizedContext as Context } from 'koa'
 import userQuery from '../db/queries/user'
 
 export default {
+  getId(ctx: Context) {
+    return ctx.session.user.id
+  },
   save(ctx: Context, id: number) {
     ctx.session.user = { id }
   },

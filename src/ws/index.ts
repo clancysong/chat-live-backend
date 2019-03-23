@@ -1,4 +1,4 @@
-import { Server } from 'http'
+import { Server, OutgoingMessage } from 'http'
 import SocketIO from 'socket.io'
 
 class Ws {
@@ -6,6 +6,10 @@ class Ws {
 
   constructor(server: Server) {
     this.io = SocketIO(server)
+
+    this.io.use((socket, next) => {
+      next()
+    })
 
     this.io.on('connection', socket => {
       socket.on('test', (data: any) => {

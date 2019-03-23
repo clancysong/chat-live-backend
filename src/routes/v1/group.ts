@@ -3,4 +3,6 @@ import controller from '../../controllers/group'
 
 const router = new Router({ prefix: '/group' })
 
+router.get('/', controller.getGroups)
+
 export default router

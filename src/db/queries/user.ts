@@ -6,6 +6,8 @@ class UserQuery extends Query {
   }
 
   public findByEmail = (email: string) => this.findAll({ email }).first()
+
+  public findByIds = (ids: number[]) => this.connect().whereIn('id', ids)
 }
 
 export default new UserQuery()

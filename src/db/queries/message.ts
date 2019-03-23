@@ -2,10 +2,10 @@ import Query, { TABLE_NAME } from './Query'
 
 class GroupQuery extends Query {
   constructor() {
-    super(TABLE_NAME.GROUP)
+    super(TABLE_NAME.MESSAGE)
   }
 
-  public findByCreator = (creatorId: number) => this.findAll({ creator: creatorId })
+  public findByIds = (ids: number[]) => this.connect().whereIn('id', ids)
 }
 
 export default new GroupQuery()

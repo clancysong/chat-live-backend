@@ -14,7 +14,12 @@ class Query {
     this.connect = () => knex(tableName)
   }
 
-  public findOne = (id: number) => this.connect().where({ id }).first()
+  public findOne = (id: number) =>
+    this.connect()
+      .where({ id })
+      .first()
+
+  public findByIds = (ids: number[]) => this.connect().whereIn('id', ids)
 
   public findAll = (opts: {} = {}) => this.connect().where(opts)
 

@@ -19,6 +19,15 @@ class GroupController {
 
     response.success(ctx, data)
   }
+
+  public async getGroupInfo(ctx: Context) {
+    const group: Group = await groupQuery.findOne(ctx.params.id)
+
+    group.membersInfo = await userQuery.findByIds(group.members)
+    group.messagesInfo = await messageQuery.findByIds(group.messages)
+
+    response.success(ctx, group)
+  }
 }
 
 export default new GroupController()

@@ -5,4 +5,6 @@ const router = new Router({ prefix: '/group' })
 
 router.get('/', controller.getGroups)
 
+router.get('/:id', controller.getGroupInfo)
+
 export default router

@@ -2,6 +2,10 @@ import { Server } from 'http'
 import Koa from 'koa'
 import IO from 'socket.io'
 import session from '../utils/session'
+import userQuery from '../db/queries/user'
+import eventTypes from './eventTypes'
+import User from '../models/User'
+import Group from '../models/Group'
 
 interface Socket extends IO.Socket {
   [propName: string]: any
@@ -27,11 +31,22 @@ class Ws {
   }
 
   private bindEvents() {
-    this.io.on('connection', (socket: Socket) => {
-      console.log(socket.user)
+    this.io.on('connection', async (socket: Socket) => {
+      const user: User = await session.fetch(socket.ctx)
 
-      socket.on('test', (data: any) => {
-        console.log(data)
+      console.log(`${user.name} 加入连接`)
+
+      socket.server.sockets.emit(eventTypes.emit.userComesOnline, user.id)
+
+      socket.on(eventTypes.on.connectToGroup, (group: Group) => {
+        console.log(`${user.name} 连接到群组 ${group.name}`)
+      })
+
+      socket.on('disconnect', async () => {
+        console.log(`${user.name} 断开连接`)
+
+        socket.server.sockets.emit(eventTypes.emit.userComesOffline, user.id)
+        await userQuery.updateStatus(user.id, false)
       })
     })
   }

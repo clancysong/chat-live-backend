@@ -8,6 +8,8 @@ class UserQuery extends Query {
   public findByEmail = (email: string) => this.findAll({ email }).first()
 
   public findByIds = (ids: number[]) => this.connect().whereIn('id', ids)
+
+  public updateStatus = (id: number, status: boolean) => this.updateOne(id, { online: status })
 }
 
 export default new UserQuery()

@@ -1,21 +1,19 @@
 import { ParameterizedContext as Context } from 'koa'
 import userQuery from '../db/queries/user'
+import groupQuery from '../db/queries/group'
 import session from '../utils/session'
 import response from '../utils/response'
 
 class AuthController {
-  public async authorize(ctx: Context) {
-    const user = await session.fetch(ctx)
-    response.success(ctx, user)
-  }
-
   public async login(ctx: Context) {
     const { email, password } = ctx.request.body
     const user = await userQuery.findByEmail(email)
 
+    user.groupsInfo = await groupQuery.findByIds(user.groups)
+
     if (user) {
       if (user.password === password) {
-        session.save(ctx, user.id)
+        await session.save(ctx, user)
         response.success(ctx, user)
       } else {
         response.error(ctx, 'The password is incorrect')
@@ -31,6 +29,8 @@ class AuthController {
 
     if (!existUser) {
       const user = await userQuery.addOne({ name, email, password })
+
+      user.groupsInfo = await groupQuery.findByIds(user.groups)
 
       session.save(ctx, user.id)
       response.success(ctx, user)

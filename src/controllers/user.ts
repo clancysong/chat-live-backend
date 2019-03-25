@@ -1,5 +1,4 @@
 import { ParameterizedContext as Context } from 'koa'
-import userQuery from '../db/queries/user'
 import groupQuery from '../db/queries/group'
 import response from '../utils/response'
 import session from '../utils/session'

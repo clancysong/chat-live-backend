@@ -1,17 +1,35 @@
-import { Server, OutgoingMessage } from 'http'
-import SocketIO from 'socket.io'
+import { Server } from 'http'
+import Koa from 'koa'
+import IO from 'socket.io'
+import session from '../utils/session'
+
+interface Socket extends IO.Socket {
+  [propName: string]: any
+}
 
 class Ws {
   private io: SocketIO.Server
 
-  constructor(server: Server) {
-    this.io = SocketIO(server)
+  constructor(app: Koa, server: Server) {
+    this.io = IO(server)
 
-    this.io.use((socket, next) => {
-      next()
+    this.io.use((socket: Socket, next) => {
+      const ctx = app.createContext(socket.request, socket.request.res)
+
+      if (session.isAuthenticated(ctx)) {
+        socket.ctx = ctx
+        socket.user = ctx.session.user
+        next()
+      }
     })
 
-    this.io.on('connection', socket => {
+    this.bindEvents()
+  }
+
+  private bindEvents() {
+    this.io.on('connection', (socket: Socket) => {
+      console.log(socket.user)
+
       socket.on('test', (data: any) => {
         console.log(data)
       })
@@ -19,4 +37,4 @@ class Ws {
   }
 }
 
-export default (server: Server) => new Ws(server)
+export default Ws

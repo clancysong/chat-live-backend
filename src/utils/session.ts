@@ -1,15 +1,13 @@
 import { ParameterizedContext as Context } from 'koa'
 import userQuery from '../db/queries/user'
+import User from '../models/User'
 
 export default {
-  getId(ctx: Context) {
-    return ctx.session.user.id
-  },
-  save(ctx: Context, id: number) {
-    ctx.session.user = { id }
+  save(ctx: Context, user: User) {
+    ctx.session.user = { id: user.id }
   },
   remove(ctx: Context) {
-    delete ctx.session.user
+    ctx.session = null
   },
   async fetch(ctx: Context) {
     if (ctx.session.user) {

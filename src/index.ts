@@ -13,6 +13,9 @@ const server = new HttpServer(app.callback())
 // socket.io
 const ws = new Ws(app, server)
 
+// error handler
+app.use(errorHandler)
+
 // session
 app.keys = ['sercet', 'new sercet']
 app.use(session({ key: 'sercet', maxAge: 7200000 }, app))
@@ -25,9 +28,6 @@ app.use(logger())
 
 // router
 app.use(router.routes())
-
-// error handler
-app.use(errorHandler)
 
 server.listen(5000)
 

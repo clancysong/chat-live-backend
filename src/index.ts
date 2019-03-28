@@ -10,11 +10,15 @@ import Ws from './ws'
 const app = new Koa()
 const server = new HttpServer(app.callback())
 
-// socket.io
-const ws = new Ws(app, server)
-
 // error handler
 app.use(errorHandler)
+
+// socket.io
+const ws = new Ws(app, server)
+app.use(async (ctx, next) => {
+  ctx.ws = ws
+  await next()
+})
 
 // session
 app.keys = ['sercet', 'new sercet']
@@ -31,4 +35,4 @@ app.use(router.routes())
 
 server.listen(5000)
 
-export default server
+export default app

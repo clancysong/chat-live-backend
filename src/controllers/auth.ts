@@ -9,8 +9,6 @@ class AuthController {
     const { email, password } = ctx.request.body
     const user = await userQuery.findByEmail(email)
 
-    user.groupsInfo = await groupQuery.findByIds(user.groups)
-
     if (user) {
       if (user.password === password) {
         await session.save(ctx, user)
@@ -29,8 +27,6 @@ class AuthController {
 
     if (!existUser) {
       const user = await userQuery.addOne({ name, email, password })
-
-      user.groupsInfo = await groupQuery.findByIds(user.groups)
 
       session.save(ctx, user.id)
       response.success(ctx, user)

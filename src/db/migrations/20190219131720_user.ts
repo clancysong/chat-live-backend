@@ -6,10 +6,7 @@ export async function up(knex: Knex): Promise<any> {
     table.string('email').notNullable().unique()
     table.string('name').notNullable()
     table.string('password').notNullable()
-    table.boolean('online').defaultTo(false)
-    table.specificType('groups', 'integer[]').defaultTo('{}')
-    table.specificType('friends', 'integer[]').defaultTo('{}')
-    table.specificType('friend_requests', 'integer[]').defaultTo('{}')
+    table.enum('status', ['online', 'offline']).defaultTo('offline')
   })
 }
 

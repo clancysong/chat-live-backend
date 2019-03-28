@@ -4,6 +4,7 @@ import knex from '../connection'
 enum TABLE_NAME {
   USER = 'user',
   GROUP = 'group',
+  USER_GROUP = 'user_group',
   MESSAGE = 'message'
 }
 

@@ -1,5 +1,10 @@
 import Query, { TABLE_NAME } from './Query'
 
+enum Status {
+  online = 'online',
+  offline = 'offline'
+}
+
 class UserQuery extends Query {
   constructor() {
     super(TABLE_NAME.USER)
@@ -9,7 +14,7 @@ class UserQuery extends Query {
 
   public findByIds = (ids: number[]) => this.connect().whereIn('id', ids)
 
-  public updateStatus = (id: number, status: boolean) => this.updateOne(id, { online: status })
+  public updateStatus = (id: number, status: Status) => this.updateOne(id, { status })
 }
 
 export default new UserQuery()

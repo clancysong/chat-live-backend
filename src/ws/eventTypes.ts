@@ -1,6 +1,7 @@
 export default {
   on: {
-    connectToGroup: 'connect to group'
+    connectToGroup: 'connect to group',
+    sendMessage: 'send message'
   },
 
   emit: {

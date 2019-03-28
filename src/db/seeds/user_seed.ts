@@ -7,21 +7,18 @@ exports.seed = (knex: Knex) => {
       return knex('user').insert([
         {
           email: 'user1@cc.com',
-          name: 'user1',
-          password: 'uu',
-          groups: '{1, 3, 4, 5, 6, 7, 8, 9}'
+          name: '用户1',
+          password: 'uu'
         },
         {
           email: 'user2@cc.com',
-          name: 'user2',
-          password: 'uu',
-          groups: '{1, 2, 5, 6, 7, 8, 9}'
+          name: '用户2',
+          password: 'uu'
         },
         {
           email: 'user3@cc.com',
-          name: 'user3',
-          password: 'uu',
-          groups: '{2, 3, 4, 7, 8, 9}'
+          name: '用户3',
+          password: 'uu'
         }
       ])
     })

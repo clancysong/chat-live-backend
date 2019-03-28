@@ -4,6 +4,7 @@ export async function up(knex: Knex): Promise<any> {
   return knex.schema.createTable('message', table => {
   table.increments('id').notNullable().unique()
   table.integer('creator').notNullable()
+  table.integer('group').notNullable()
   table.timestamp('created_at').defaultTo(knex.fn.now())
   table.string('content').notNullable()
 })}

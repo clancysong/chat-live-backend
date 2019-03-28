@@ -1,8 +1,10 @@
-import { Server } from 'http'
-import Koa from 'koa'
 import IO from 'socket.io'
+import Koa from 'koa'
+import { Server } from 'http'
 import session from '../utils/session'
 import userQuery from '../db/queries/user'
+import groupQuery from '../db/queries/group'
+import messageQuery from '../db/queries/message'
 import eventTypes from './eventTypes'
 import User from '../models/User'
 import Group from '../models/Group'
@@ -30,26 +32,33 @@ class Ws {
     this.bindEvents()
   }
 
+  public broadcast = (eventType: string, payload: any) => {
+    this.io.sockets.emit(eventType, payload)
+  }
+
   private bindEvents() {
     this.io.on('connection', async (socket: Socket) => {
       const user: User = await session.fetch(socket.ctx)
+      let groupId: number
 
       console.log(`${user.name} 加入连接`)
 
-      socket.server.sockets.emit(eventTypes.emit.userComesOnline, user.id)
+      socket.on(eventTypes.on.connectToGroup, (id: number) => {
+        groupId = id
+      })
 
-      socket.on(eventTypes.on.connectToGroup, (group: Group) => {
-        console.log(`${user.name} 连接到群组 ${group.name}`)
+      socket.on(eventTypes.on.sendMessage, async (content: string) => {
+        const message = await messageQuery.addOne({ creator: user.id, content})
+        const group = await groupQuery.addMessage(groupId, message.id)
+        console.log(group)
       })
 
       socket.on('disconnect', async () => {
         console.log(`${user.name} 断开连接`)
-
-        socket.server.sockets.emit(eventTypes.emit.userComesOffline, user.id)
-        await userQuery.updateStatus(user.id, false)
       })
     })
   }
 }
 
 export default Ws
+export { Socket }

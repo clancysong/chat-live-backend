@@ -12,7 +12,11 @@ class UserQuery extends Query {
 
   public findByEmail = (email: string) => this.findAll({ email }).first()
 
-  public findByIds = (ids: number[]) => this.connect().whereIn('id', ids)
+  public findByGroup = (id: number) =>
+    this.connect()
+      .select('user_id as id', 'email', 'name', 'status')
+      .leftJoin('user_group', 'user.id', 'user_group.user_id')
+      .where('user_group.group_id', id)
 
   public updateStatus = (id: number, status: Status) => this.updateOne(id, { status })
 }

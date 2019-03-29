@@ -5,25 +5,25 @@ exports.seed = (knex: Knex) => {
     .del()
     .then(() => {
       return knex('user_group').insert([
-        { user: 1, group: 1 },
-        { user: 1, group: 4 },
-        { user: 1, group: 7 },
-        { user: 2, group: 2 },
-        { user: 2, group: 5 },
-        { user: 2, group: 8 },
-        { user: 3, group: 3 },
-        { user: 3, group: 6 },
-        { user: 3, group: 9 },
+        { user_id: 1, group_id: 1 },
+        { user_id: 1, group_id: 4 },
+        { user_id: 1, group_id: 7 },
+        { user_id: 2, group_id: 2 },
+        { user_id: 2, group_id: 5 },
+        { user_id: 2, group_id: 8 },
+        { user_id: 3, group_id: 3 },
+        { user_id: 3, group_id: 6 },
+        { user_id: 3, group_id: 9 },
 
-        { user: 1, group: 2 },
-        { user: 1, group: 5 },
-        { user: 1, group: 8 },
-        { user: 2, group: 3 },
-        { user: 2, group: 6 },
-        { user: 2, group: 9 },
-        { user: 3, group: 1 },
-        { user: 3, group: 4 },
-        { user: 3, group: 7 }
+        { user_id: 1, group_id: 2 },
+        { user_id: 1, group_id: 5 },
+        { user_id: 1, group_id: 8 },
+        { user_id: 2, group_id: 3 },
+        { user_id: 2, group_id: 6 },
+        { user_id: 2, group_id: 9 },
+        { user_id: 3, group_id: 1 },
+        { user_id: 3, group_id: 4 },
+        { user_id: 3, group_id: 7 }
       ])
     })
 }

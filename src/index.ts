@@ -23,6 +23,10 @@ app.use(async (ctx, next) => {
 // session
 app.keys = ['sercet', 'new sercet']
 app.use(session({ key: 'sercet', maxAge: 7200000 }, app))
+app.use(async (ctx, next) => {
+  ctx.user = ctx.session.user
+  await next()
+})
 
 // body parser
 app.use(bodyParser({ multipart: true }))

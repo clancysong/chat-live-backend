@@ -47,12 +47,6 @@ class Ws {
         groupId = id
       })
 
-      socket.on(eventTypes.on.sendMessage, async (content: string) => {
-        const message = await messageQuery.addOne({ creator: user.id, content})
-        const group = await groupQuery.addMessage(groupId, message.id)
-        console.log(group)
-      })
-
       socket.on('disconnect', async () => {
         console.log(`${user.name} 断开连接`)
       })

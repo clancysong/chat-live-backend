@@ -1,19 +1,17 @@
 import Query, { TABLE_NAME } from './Query'
-import knex from '../connection'
 
 class GroupQuery extends Query {
   constructor() {
     super(TABLE_NAME.GROUP)
   }
 
-  public findByCreator = (creatorId: number) => this.findAll({ creator: creatorId })
+  public findByCreator = (id: number) => this.findAll({ creator: id })
 
-  public addMessage = (groupId: number, messageId: number) =>
+  public findByMember = (id: number) =>
     this.connect()
-      .where({ id: groupId })
-      .update({
-        messages: knex.raw('array_append(messages, ?)', [messageId])
-      })
+      .select('group_id as id', 'name', 'creator_id')
+      .leftJoin('user_group', 'group.id', 'user_group.group_id')
+      .where('user_group.user_id', id)
 }
 
 export default new GroupQuery()

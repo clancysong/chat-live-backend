@@ -5,7 +5,12 @@ class GroupQuery extends Query {
     super(TABLE_NAME.MESSAGE)
   }
 
-  public findByIds = (ids: number[]) => this.connect().whereIn('id', ids)
+  public findByGroup = (id: number) =>
+    this.connect()
+      .select('message.id as id', 'creator_id', 'user.name as creator_name', 'group_id', 'created_at', 'content')
+      .from('message')
+      .leftJoin('user', 'message.creator_id', 'user.id')
+      .where('message.group_id', id)
 }
 
 export default new GroupQuery()

@@ -4,22 +4,20 @@ exports.seed = (knex: Knex) => {
   return knex('user')
     .del()
     .then(() => {
-      return knex('user').insert([
-        {
-          email: 'user1@cc.com',
-          name: '用户1',
-          password: 'uu'
-        },
-        {
-          email: 'user2@cc.com',
-          name: '用户2',
-          password: 'uu'
-        },
-        {
-          email: 'user3@cc.com',
-          name: '用户3',
-          password: 'uu'
-        }
-      ])
+      return knex('user').insert(
+        Array.from({ length: 3 }, (_, i) => i + 1)
+          .map(i => ({
+            email: `user${i}@cc.com`,
+            name: `用户${i}`,
+            password: 'uu'
+          }))
+          .concat([
+            {
+              email: `admin@cc.com`,
+              name: `炒鸡管理猿`,
+              password: 'admin'
+            }
+          ])
+      )
     })
 }

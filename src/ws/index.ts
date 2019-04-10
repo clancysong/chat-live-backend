@@ -5,7 +5,6 @@ import session from '../utils/session'
 import userQuery from '../db/queries/user'
 import groupQuery from '../db/queries/group'
 import messageQuery from '../db/queries/message'
-import eventTypes from './eventTypes'
 import User from '../models/User'
 import Group from '../models/Group'
 
@@ -32,23 +31,30 @@ class Ws {
     this.bindEvents()
   }
 
-  public broadcast = (eventType: string, payload: any) => {
-    this.io.sockets.emit(eventType, payload)
-  }
-
   private bindEvents() {
     this.io.on('connection', async (socket: Socket) => {
-      const user: User = await session.fetch(socket.ctx)
+      const user = await session.fetch(socket.ctx)
       let groupId: number
+      let groupName: string
 
-      console.log(`${user.name} 加入连接`)
+      console.log(user.id)
 
-      socket.on(eventTypes.on.connectToGroup, (id: number) => {
+      socket.on('GROUP_CONNECT', (id: number) => {
+        if (groupName) socket.leave(groupName)
+
         groupId = id
+        groupName = `group:${id}`
+
+        socket.join(groupName)
       })
 
-      socket.on('disconnect', async () => {
-        console.log(`${user.name} 断开连接`)
+      socket.on('MESSAGE_SEND', async (content: string) => {
+        const [message] = await messageQuery.addOne({ creator_id: user.id, group_id: groupId, content })
+
+        message.creator_name = user.name
+
+        socket.emit('MESSAGE_RECEIVE', message)
+        socket.to(groupName).emit('MESSAGE_RECEIVE', message)
       })
     })
   }

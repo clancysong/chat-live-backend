@@ -7,6 +7,8 @@ class GroupQuery extends Query {
 
   public findByCreator = (id: number) => this.findAll({ creator: id })
 
+  public findByType = (type: string) => this.findAll({ type })
+
   public findByMember = (id: number) =>
     this.connect()
       .select('group_id as id', 'name', 'creator_id')

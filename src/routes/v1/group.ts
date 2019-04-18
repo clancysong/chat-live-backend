@@ -3,7 +3,7 @@ import controller from '../../controllers/group'
 
 const router = new Router({ prefix: '/group' })
 
-router.get('/', controller.getGroups)
+router.get('/', controller.getPublicGroups)
 
 router.get('/:id', controller.getGroupInfo)
 

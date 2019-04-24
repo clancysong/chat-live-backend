@@ -37,8 +37,6 @@ class Ws {
       let groupId: number
       let groupName: string
 
-      console.log(user.id)
-
       socket.on('GROUP_CONNECT', (id: number) => {
         if (groupName) socket.leave(groupName)
 

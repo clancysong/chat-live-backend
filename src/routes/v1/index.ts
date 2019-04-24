@@ -1,8 +1,7 @@
 import Router from 'koa-router'
 import authRouter from './auth'
-import userRouter from './user'
-import groupRouter from './group'
-import userGroupRouter from './userGroup'
+import userRouter from './users'
+import groupRouter from './groups'
 import response from '../../utils/response'
 import session from '../../utils/session'
 
@@ -15,12 +14,11 @@ router.use('/*', async (ctx, next) => {
   }
 
   if (session.isAuthenticated(ctx) || isPathAllowed()) await next()
-  else response.error(ctx, 'Authentication failed', 401)
+  else response.error(ctx, { status: 401, message: 'Authentication failed' })
 })
 
 router.use(authRouter.routes())
 router.use(userRouter.routes())
 router.use(groupRouter.routes())
-router.use(userGroupRouter.routes())
 
 export default router

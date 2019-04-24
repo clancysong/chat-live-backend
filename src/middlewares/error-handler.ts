@@ -10,7 +10,7 @@ const errorHandler: Middleware = async (ctx, next) => {
 
     console.log(message)
 
-    response.error(ctx, message, status)
+    response.error(ctx, { message, status })
   }
 }
 

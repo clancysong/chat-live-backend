@@ -1,7 +1,7 @@
 import Router from 'koa-router'
-import controller from '../../controllers/group'
+import controller from '../../controllers/groups'
 
-const router = new Router({ prefix: '/group' })
+const router = new Router({ prefix: '/groups' })
 
 router.get('/', controller.getPublicGroups)
 

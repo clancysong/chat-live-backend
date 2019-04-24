@@ -28,7 +28,7 @@ class UserController {
 
       response.success(ctx)
     } else {
-      response.error(ctx, { message: 'Already joined the group' })
+      response.warning(ctx, { code: 102, message: 'Already joined the group' })
     }
   }
 }

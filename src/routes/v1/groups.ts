@@ -7,4 +7,6 @@ router.get('/', controller.getPublicGroups)
 
 router.get('/:id', controller.getGroupInfo)
 
+router.post('/', controller.createPrivateGroup)
+
 export default router

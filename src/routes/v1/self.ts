@@ -9,6 +9,8 @@ router.get('/groups', controller.getJoinedGroups)
 
 router.post('/groups', controller.joinGroup)
 
+router.get('/friends', controller.getFriends)
+
 router.get('/friend_requests', controller.getFriendRequests)
 
 router.post('/friend_requests', controller.sendFriendRequest)

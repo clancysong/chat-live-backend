@@ -18,6 +18,12 @@ class UserQuery extends Query {
       .leftJoin('user_group', 'user.id', 'user_group.user_id')
       .where('user_group.group_id', id)
 
+  public findByUser = (id: number) =>
+    this.connect()
+      .select('userb_id as id', 'email', 'name', 'status')
+      .leftJoin('user_user', 'user.id', 'user_user.userb_id')
+      .where('user_user.usera_id', id)
+
   public updateStatus = (id: number, status: Status) => this.updateOne(id, { status })
 }
 

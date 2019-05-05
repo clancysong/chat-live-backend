@@ -1,4 +1,5 @@
 import { ParameterizedContext as Context } from 'koa'
+import userQuery from '../db/queries/user'
 import groupQuery from '../db/queries/group'
 import userGroupQuery from '../db/queries/userGroup'
 import friendRequestQuery from '../db/queries/friendRequest'
@@ -34,15 +35,24 @@ class UserController {
     }
   }
 
-  public async getFriendRequests(ctx: Context) {
-    const request = await friendRequestQuery.findAll({ receiver_id: ctx.user.id })
+  public async getFriends(ctx: Context) {
+    const friends = await userQuery.findByUser(ctx.user.id)
 
-    response.success(ctx, { data: request })
+    response.success(ctx, { data: friends })
+  }
+
+  public async getFriendRequests(ctx: Context) {
+    const requests = await friendRequestQuery.findByReceiver(ctx.user.id)
+
+    response.success(ctx, { data: requests })
   }
 
   public async sendFriendRequest(ctx: Context) {
     const { receiver_id } = ctx.request.body
     const data = { requester_id: ctx.user.id, receiver_id }
+
+    console.log(ctx.request.body)
+    console.log(data)
 
     const existing = await friendRequestQuery.findAll(data)
 
@@ -56,10 +66,12 @@ class UserController {
   }
 
   public async handleFriendRequests(ctx: Context) {
+    console.log(Boolean(ctx.query.accept))
     const { requester_id, receiver_id } = await friendRequestQuery.findOne(ctx.params.id)
 
     if (ctx.query.accept) {
       await userUserQuery.addOne({ usera_id: requester_id, userb_id: receiver_id })
+      await userUserQuery.addOne({ usera_id: receiver_id, userb_id: requester_id })
     }
 
     const removedRequest = await friendRequestQuery.removeOne(ctx.params.id)

@@ -24,7 +24,7 @@ class Query {
 
   public findByIds = (ids: number[]) => this.connect().whereIn('id', ids)
 
-  public findAll = (opts: {} = {}) => this.connect().where(opts)
+  public findAll = (opts: object) => this.connect().where(opts)
 
   public addOne = (newOne: {}) =>
     this.connect()
@@ -35,6 +35,12 @@ class Query {
     this.connect()
       .delete()
       .where({ id })
+      .returning('*')
+
+  public removeAll = (opts: object) =>
+    this.connect()
+      .delete()
+      .where(opts)
       .returning('*')
 
   public updateOne = (id: number, newOne: {}) =>

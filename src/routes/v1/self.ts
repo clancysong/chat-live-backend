@@ -11,6 +11,8 @@ router.post('/groups', controller.joinGroup)
 
 router.get('/friends', controller.getFriends)
 
+router.delete('/friends/:id', controller.removeFriend)
+
 router.get('/friend_requests', controller.getFriendRequests)
 
 router.post('/friend_requests', controller.sendFriendRequest)

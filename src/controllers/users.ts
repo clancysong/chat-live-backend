@@ -41,6 +41,13 @@ class UserController {
     response.success(ctx, { data: friends })
   }
 
+  public async removeFriend(ctx: Context) {
+    await userUserQuery.removeAll({ usera_id: ctx.user.id, userb_id: ctx.params.id })
+    await userUserQuery.removeAll({ usera_id: ctx.params.id, userb_id: ctx.user.id })
+
+    response.success(ctx)
+  }
+
   public async getFriendRequests(ctx: Context) {
     const requests = await friendRequestQuery.findByReceiver(ctx.user.id)
 
@@ -49,34 +56,38 @@ class UserController {
 
   public async sendFriendRequest(ctx: Context) {
     const { receiver_id } = ctx.request.body
-    const data = { requester_id: ctx.user.id, receiver_id }
 
-    console.log(ctx.request.body)
-    console.log(data)
+    const isFriend = (await userUserQuery.findAll({ usera_id: ctx.user.id, userb_id: receiver_id })).length > 0
 
-    const existing = await friendRequestQuery.findAll(data)
+    if (!isFriend) {
+      const data = { requester_id: ctx.user.id, receiver_id }
+      const existing = await friendRequestQuery.findAll(data)
 
-    if (existing.length === 0) {
-      const rs = await friendRequestQuery.addOne(data)
+      if (existing.length === 0) {
+        const rs = await friendRequestQuery.addOne(data)
 
-      response.success(ctx)
+        response.success(ctx, { data: rs })
+      } else {
+        response.warning(ctx, { code: 102, message: 'Repeated request' })
+      }
     } else {
-      response.warning(ctx, { code: 102, message: 'Repeated request' })
+      response.warning(ctx, { code: 103, message: 'Already be friend' })
     }
   }
 
   public async handleFriendRequests(ctx: Context) {
-    console.log(Boolean(ctx.query.accept))
     const { requester_id, receiver_id } = await friendRequestQuery.findOne(ctx.params.id)
 
-    if (ctx.query.accept) {
+    if (ctx.query.accept === 'true') {
       await userUserQuery.addOne({ usera_id: requester_id, userb_id: receiver_id })
       await userUserQuery.addOne({ usera_id: receiver_id, userb_id: requester_id })
     }
 
-    const removedRequest = await friendRequestQuery.removeOne(ctx.params.id)
+    await friendRequestQuery.removeOne(ctx.params.id)
 
-    response.success(ctx, { data: removedRequest })
+    const addedFriend = await userQuery.findOne(requester_id)
+
+    response.success(ctx, { data: addedFriend })
   }
 }
 

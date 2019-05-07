@@ -7,7 +7,11 @@ class PrivateChatQuery extends Query {
 
   public findByUuid = (userId: number, uuid: string) => this.findAll({ usera_id: userId, uuid }).first()
 
-  public findByUser = (id: number) => this.findAll({ usera_id: id })
+  public findByUser = (id: number) =>
+    this.connect()
+      .select('private_chat.id as id', 'uuid', 'usera_id', 'userb_id', 'user.name as userb_name')
+      .leftJoin('user', 'private_chat.userb_id', 'user.id')
+      .where('private_chat.usera_id', id)
 
   public findByBoth = (id1: number, id2: number) => this.findAll({ usera_id: id1, userb_id: id2 })
 }

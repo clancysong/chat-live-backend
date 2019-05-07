@@ -45,8 +45,6 @@ class Ws {
         chatUuid = payload.chatUuid
         roomName = `${chatType}:${chatUuid}`
 
-        console.log('加入房间', roomName)
-
         socket.join(roomName)
       })
 

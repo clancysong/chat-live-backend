@@ -23,4 +23,38 @@ describe('routes: user', () => {
       done()
     })
   })
+
+  describe('POST /api/login', () => {
+    it('用户登录', done => {
+      chai
+        .request(server)
+        .post('api/login')
+        .send({ name: 'user1', password: 'uu' })
+        .end((err, res) => {
+          should.not.exist(err)
+          res.status.should.eql(200)
+          res.type.should.eql('application/json')
+          res.body.status.should.eql('success')
+        })
+
+      done()
+    })
+  })
+
+  describe('POST /api/register', () => {
+    it('用户注册', done => {
+      chai
+        .request(server)
+        .post('api/register')
+        .send({ name: 'test', password: 'test' })
+        .end((err, res) => {
+          should.not.exist(err)
+          res.status.should.eql(201)
+          res.type.should.eql('application/json')
+          res.body.status.should.eql('success')
+        })
+
+      done()
+    })
+  })
 })

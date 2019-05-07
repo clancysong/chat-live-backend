@@ -5,7 +5,7 @@ export async function up(knex: Knex): Promise<any> {
   table.increments('id').notNullable().unique()
   table.integer('creator_id').notNullable()
   table.enum('chat_type', ['group', 'private_chat']).notNullable()
-  table.integer('chat_id').notNullable()
+  table.string('chat_uuid').notNullable()
   table.timestamp('created_at').defaultTo(knex.fn.now())
   table.string('content').notNullable()
 })}

@@ -13,10 +13,10 @@ class GroupController {
   }
 
   public async getGroupInfo(ctx: Context) {
-    const group = await groupQuery.findOne(ctx.params.id)
+    const group = await groupQuery.findByUuid(ctx.params.uuid)
 
     group.members = await userQuery.findByGroup(group.id)
-    group.messages = await messageQuery.findByGroup(group.id)
+    group.messages = await messageQuery.findByGroup(group.uuid)
 
     response.success(ctx, { data: group })
   }

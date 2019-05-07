@@ -5,10 +5,11 @@ class PrivateChatQuery extends Query {
     super(TABLE_NAME.PRIVATE_CHAT)
   }
 
-  public findByBoth = (id1: number, id2: number) =>
-    this.connect()
-      .where({ usera_id: id1, userb_id: id2 })
-      .orWhere({ usera_id: id2, userb_id: id1 })
+  public findByUuid = (userId: number, uuid: string) => this.findAll({ usera_id: userId, uuid }).first()
+
+  public findByUser = (id: number) => this.findAll({ usera_id: id })
+
+  public findByBoth = (id1: number, id2: number) => this.findAll({ usera_id: id1, userb_id: id2 })
 }
 
 export default new PrivateChatQuery()

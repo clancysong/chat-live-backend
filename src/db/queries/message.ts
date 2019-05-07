@@ -5,17 +5,17 @@ class GroupQuery extends Query {
     super(TABLE_NAME.MESSAGE)
   }
 
-  public findByGroup = (id: number) => this.findByChat('group', id)
+  public findByGroup = (uuid: string) => this.findByChat('group', uuid)
 
-  public findByPrivateChat = (id: number) => this.findByChat('private_chat', id)
+  public findByPrivateChat = (uuid: string) => this.findByChat('private_chat', uuid)
 
-  private findByChat = (type: string, id: number) =>
+  private findByChat = (type: string, uuid: string) =>
     this.connect()
       .select('message.id as id', 'creator_id', 'user.name as creator_name', 'created_at', 'content')
       .from('message')
       .leftJoin('user', 'message.creator_id', 'user.id')
       .where('message.chat_type', type)
-      .andWhere('message.chat_id', id)
+      .andWhere('message.chat_uuid', uuid)
 }
 
 export default new GroupQuery()

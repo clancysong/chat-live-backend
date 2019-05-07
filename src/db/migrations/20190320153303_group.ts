@@ -3,6 +3,7 @@ import * as Knex from 'knex'
 export async function up(knex: Knex): Promise<any> {
   return knex.schema.createTable('group', table => {
   table.increments('id').unique()
+  table.string('uuid').notNullable()
   table.string('name').notNullable()
   table.integer('creator_id').notNullable()
   table.enum('type', ['public', 'private']).defaultTo('private')

@@ -5,7 +5,7 @@ const router = new Router({ prefix: '/groups' })
 
 router.get('/', controller.getPublicGroups)
 
-router.get('/:id', controller.getGroupInfo)
+router.get('/:uuid', controller.getGroupInfo)
 
 router.post('/', controller.createPrivateGroup)
 

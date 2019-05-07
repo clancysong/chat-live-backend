@@ -35,15 +35,15 @@ class Ws {
     this.io.on('connection', async (socket: Socket) => {
       const user = await session.fetch(socket.ctx)
       let chatType: string
-      let chatId: number
+      let chatUuid: string
       let roomName: string
 
-      socket.on('CHAT_CONNECT', (payload: { chatType: string; chatId: number }) => {
+      socket.on('CHAT_CONNECT', (payload: { chatType: string; chatUuid: string }) => {
         if (roomName) socket.leave(roomName)
 
         chatType = payload.chatType
-        chatId = payload.chatId
-        roomName = `${chatType}:${chatId}`
+        chatUuid = payload.chatUuid
+        roomName = `${chatType}:${chatUuid}`
 
         console.log('加入房间', roomName)
 
@@ -54,7 +54,7 @@ class Ws {
         const [message] = await messageQuery.addOne({
           creator_id: user.id,
           chat_type: chatType,
-          chat_id: chatId,
+          chat_uuid: chatUuid,
           content
         })
 

@@ -5,6 +5,7 @@ export async function up(knex: Knex): Promise<any> {
     table.increments('id').unique()
     table.integer('usera_id').notNullable()
     table.integer('userb_id').notNullable()
+    table.string('uuid').notNullable()
   })
 }
 

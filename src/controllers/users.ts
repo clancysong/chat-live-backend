@@ -1,4 +1,5 @@
 import { ParameterizedContext as Context } from 'koa'
+import getUuid from 'uuid'
 import userQuery from '../db/queries/user'
 import groupQuery from '../db/queries/group'
 import userGroupQuery from '../db/queries/userGroup'
@@ -99,16 +100,24 @@ class UserController {
     if (existing.length > 0) {
       response.success(ctx, { data: existing[0] })
     } else {
-      const [chat] = await privateChatQuery.addOne({ usera_id: ctx.user.id, userb_id: receiver_id })
+      const uuid = getUuid()
+      await privateChatQuery.addOne({ usera_id: ctx.user.id, userb_id: receiver_id, uuid })
+      await privateChatQuery.addOne({ usera_id: receiver_id, userb_id: ctx.user.id, uuid })
 
-      response.success(ctx, { data: chat })
+      response.success(ctx, { data: { uuid } })
     }
   }
 
-  public async fetchPrivateChatInfo(ctx: Context) {
-    const chat = await privateChatQuery.findOne(ctx.params.id)
+  public async fetchPrivateChats(ctx: Context) {
+    const chats = await privateChatQuery.findByUser(ctx.user.id)
 
-    chat.messages = await messageQuery.findByPrivateChat(chat.id)
+    response.success(ctx, { data: chats })
+  }
+
+  public async fetchPrivateChatInfo(ctx: Context) {
+    const chat = await privateChatQuery.findByUuid(ctx.user.id, ctx.params.uuid)
+
+    if (chat) chat.messages = await messageQuery.findByPrivateChat(chat.uuid)
 
     response.success(ctx, { data: chat })
   }

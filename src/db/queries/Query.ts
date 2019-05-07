@@ -7,7 +7,8 @@ enum TABLE_NAME {
   USER_GROUP = 'user_group',
   MESSAGE = 'message',
   USER_USER = 'user_user',
-  FRIEND_REQUEST = 'friend_request'
+  FRIEND_REQUEST = 'friend_request',
+  PRIVATE_CHAT = 'private_chat'
 }
 
 class Query {

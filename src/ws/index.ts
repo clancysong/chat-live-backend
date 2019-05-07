@@ -34,25 +34,34 @@ class Ws {
   private bindEvents() {
     this.io.on('connection', async (socket: Socket) => {
       const user = await session.fetch(socket.ctx)
-      let groupId: number
-      let groupName: string
+      let chatType: string
+      let chatId: number
+      let roomName: string
 
-      socket.on('GROUP_CONNECT', (id: number) => {
-        if (groupName) socket.leave(groupName)
+      socket.on('CHAT_CONNECT', (payload: { chatType: string; chatId: number }) => {
+        if (roomName) socket.leave(roomName)
 
-        groupId = id
-        groupName = `group:${id}`
+        chatType = payload.chatType
+        chatId = payload.chatId
+        roomName = `${chatType}:${chatId}`
 
-        socket.join(groupName)
+        console.log('加入房间', roomName)
+
+        socket.join(roomName)
       })
 
       socket.on('MESSAGE_SEND', async (content: string) => {
-        const [message] = await messageQuery.addOne({ creator_id: user.id, group_id: groupId, content })
+        const [message] = await messageQuery.addOne({
+          creator_id: user.id,
+          chat_type: chatType,
+          chat_id: chatId,
+          content
+        })
 
         message.creator_name = user.name
 
         socket.emit('MESSAGE_RECEIVE', message)
-        socket.to(groupName).emit('MESSAGE_RECEIVE', message)
+        socket.to(roomName).emit('MESSAGE_RECEIVE', message)
       })
     })
   }

@@ -1,9 +1,9 @@
 import Query, { TABLE_NAME } from './Query'
 
-class GroupQuery extends Query {
+class UserUserQuery extends Query {
   constructor() {
     super(TABLE_NAME.USER_USER)
   }
 }
 
-export default new GroupQuery()
+export default new UserUserQuery()

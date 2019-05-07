@@ -4,6 +4,8 @@ import groupQuery from '../db/queries/group'
 import userGroupQuery from '../db/queries/userGroup'
 import friendRequestQuery from '../db/queries/friendRequest'
 import userUserQuery from '../db/queries/userUser'
+import privateChatQuery from '../db/queries/privateChat'
+import messageQuery from '../db/queries/message'
 import response from '../utils/response'
 import session from '../utils/session'
 
@@ -88,6 +90,27 @@ class UserController {
     const addedFriend = await userQuery.findOne(requester_id)
 
     response.success(ctx, { data: addedFriend })
+  }
+
+  public async createPrivateChat(ctx: Context) {
+    const { receiver_id } = ctx.request.body
+    const existing = await privateChatQuery.findByBoth(ctx.user.id, receiver_id)
+
+    if (existing.length > 0) {
+      response.success(ctx, { data: existing[0] })
+    } else {
+      const [chat] = await privateChatQuery.addOne({ usera_id: ctx.user.id, userb_id: receiver_id })
+
+      response.success(ctx, { data: chat })
+    }
+  }
+
+  public async fetchPrivateChatInfo(ctx: Context) {
+    const chat = await privateChatQuery.findOne(ctx.params.id)
+
+    chat.messages = await messageQuery.findByPrivateChat(chat.id)
+
+    response.success(ctx, { data: chat })
   }
 }
 

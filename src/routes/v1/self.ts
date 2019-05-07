@@ -19,4 +19,8 @@ router.post('/friend_requests', controller.sendFriendRequest)
 
 router.delete('/friend_requests/:id', controller.handleFriendRequests)
 
+router.post('/private_chats', controller.createPrivateChat)
+
+router.get('/private_chats/:id', controller.fetchPrivateChatInfo)
+
 export default router

@@ -1,4 +1,5 @@
 import { ParameterizedContext as Context } from 'koa'
+import getUuid from 'uuid'
 import groupQuery from '../db/queries/group'
 import userQuery from '../db/queries/user'
 import userGroupQuery from '../db/queries/userGroup'
@@ -23,7 +24,7 @@ class GroupController {
 
   public async createPrivateGroup(ctx: Context) {
     const { name } = ctx.request.body
-    const [group] = await groupQuery.addOne({ name, creator_id: ctx.user.id, type: 'private' })
+    const [group] = await groupQuery.addOne({ uuid: getUuid(), name, creator_id: ctx.user.id, type: 'private' })
 
     await userGroupQuery.addOne({ user_id: ctx.user.id, group_id: group.id })
 

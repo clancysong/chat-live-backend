@@ -104,7 +104,9 @@ class UserController {
       await privateChatQuery.addOne({ usera_id: ctx.user.id, userb_id: receiver_id, uuid })
       await privateChatQuery.addOne({ usera_id: receiver_id, userb_id: ctx.user.id, uuid })
 
-      response.success(ctx, { data: { uuid } })
+      const chat = await privateChatQuery.findByUuid(ctx.user.id, uuid)
+
+      response.success(ctx, { data: chat })
     }
   }
 

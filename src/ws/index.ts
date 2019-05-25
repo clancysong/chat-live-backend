@@ -2,7 +2,7 @@ import IO from 'socket.io'
 import Koa from 'koa'
 import { Server } from 'http'
 import session from '../utils/session'
-import userQuery from '../db/queries/user'
+import userQuery, { Status } from '../db/queries/user'
 import groupQuery from '../db/queries/group'
 import messageQuery from '../db/queries/message'
 import User from '../models/User'
@@ -33,10 +33,30 @@ class Ws {
 
   private bindEvents() {
     this.io.on('connection', async (socket: Socket) => {
-      const user = await session.fetch(socket.ctx)
+      let user: User
       let chatType: string
       let chatUuid: string
       let roomName: string
+      socket.on('disconnect', async () => {
+        if (user) {
+          await this.comeOffline(user)
+          socket.server.sockets.emit('USER_COME_OFFLINE', user)
+
+          console.log('COME OFFLINE', user.name)
+        }
+      })
+
+      socket.on('COME_ONLINE', async (id: number) => {
+        if (user) {
+          await this.comeOffline(user)
+          socket.server.sockets.emit('USER_COME_OFFLINE', user)
+        }
+
+        user = (await userQuery.updateStatus(id, Status.online))[0]
+        socket.server.sockets.emit('USER_COME_ONLINE', user)
+
+        console.log('COME ONLINE', user.name)
+      })
 
       socket.on('CHAT_CONNECT', (payload: { chatType: string; chatUuid: string }) => {
         if (roomName) socket.leave(roomName)
@@ -63,6 +83,8 @@ class Ws {
       })
     })
   }
+
+  private comeOffline = (user: User) => userQuery.updateStatus(user.id, Status.offline)
 }
 
 export default Ws

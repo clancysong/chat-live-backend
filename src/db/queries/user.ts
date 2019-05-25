@@ -28,3 +28,4 @@ class UserQuery extends Query {
 }
 
 export default new UserQuery()
+export { Status }

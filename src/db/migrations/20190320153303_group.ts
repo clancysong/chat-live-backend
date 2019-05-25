@@ -6,6 +6,8 @@ export async function up(knex: Knex): Promise<any> {
   table.string('uuid').notNullable()
   table.string('name').notNullable()
   table.integer('creator_id').notNullable()
+  table.string('cover')
+  table.string('avatar')
   table.enum('type', ['public', 'private']).defaultTo('private')
 })}
 

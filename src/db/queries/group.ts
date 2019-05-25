@@ -13,7 +13,7 @@ class GroupQuery extends Query {
 
   public findByMember = (id: number) =>
     this.connect()
-      .select('group_id as id', 'uuid', 'name', 'creator_id')
+      .select('group_id as id', 'uuid', 'name', 'creator_id', 'cover', 'avatar')
       .leftJoin('user_group', 'group.id', 'user_group.group_id')
       .where('user_group.user_id', id)
 }

@@ -4,6 +4,7 @@ import groupQuery from '../db/queries/group'
 import userQuery from '../db/queries/user'
 import userGroupQuery from '../db/queries/userGroup'
 import messageQuery from '../db/queries/message'
+import channelQuery from '../db/queries/channel'
 import response from '../utils/response'
 
 class GroupController {
@@ -17,7 +18,8 @@ class GroupController {
     const group = await groupQuery.findByUuid(ctx.params.uuid)
 
     group.members = await userQuery.findByGroup(group.id)
-    group.messages = await messageQuery.findByGroup(group.uuid)
+    group.channels = await channelQuery.findAll({ group_id: group.id })
+    // group.messages = await messageQuery.findByGroup(group.uuid)
 
     response.success(ctx, { data: group })
   }

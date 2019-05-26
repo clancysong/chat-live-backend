@@ -9,4 +9,10 @@ router.get('/:uuid', controller.getGroupInfo)
 
 router.post('/', controller.createPrivateGroup)
 
+router.get('/channels/:uuid', controller.fetchChannelInfo)
+
+router.post('/:groupId/channels', controller.createChannel)
+
+router.delete('/channels/:id', controller.removeChannel)
+
 export default router

@@ -5,7 +5,7 @@ class GroupQuery extends Query {
     super(TABLE_NAME.MESSAGE)
   }
 
-  public findByGroup = (uuid: string) => this.findByChat('group', uuid)
+  public findByChannel = (uuid: string) => this.findByChat('group', uuid)
 
   public findByPrivateChat = (uuid: string) => this.findByChat('private_chat', uuid)
 

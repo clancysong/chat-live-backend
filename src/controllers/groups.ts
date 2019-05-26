@@ -32,6 +32,31 @@ class GroupController {
 
     response.success(ctx, { data: group })
   }
+
+  public async fetchChannelInfo(ctx: Context) {
+    const channel = await channelQuery.findByUuid(ctx.params.uuid)
+
+    channel.messages = await messageQuery.findByChannel(channel.uuid)
+
+    response.success(ctx, { data: channel })
+  }
+
+  public async createChannel(ctx: Context) {
+    const { name } = ctx.request.body
+    const { groupId } = ctx.params
+
+    const [channel] = await channelQuery.addOne({ uuid: getUuid(), name, creator_id: ctx.user.id, group_id: groupId })
+
+    response.success(ctx, { data: channel })
+  }
+
+  public async removeChannel(ctx: Context) {
+    const [channel] = await channelQuery.removeOne(ctx.params.id)
+
+    await messageQuery.removeAll({ chat_type: 'group', chat_uuid: channel.uuid })
+
+    response.success(ctx, { data: channel })
+  }
 }
 
 export default new GroupController()

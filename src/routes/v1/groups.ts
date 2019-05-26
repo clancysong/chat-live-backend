@@ -9,6 +9,8 @@ router.get('/:uuid', controller.getGroupInfo)
 
 router.post('/', controller.createPrivateGroup)
 
+router.delete('/:id', controller.removeGroup)
+
 router.get('/channels/:uuid', controller.fetchChannelInfo)
 
 router.post('/:groupId/channels', controller.createChannel)

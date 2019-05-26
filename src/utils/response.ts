@@ -4,6 +4,7 @@ import { ParameterizedContext as Context } from 'koa'
 Code Info
 101 - No Result
 102 - Already Exist
+103 - Not Creator
 */
 
 interface Params {

@@ -59,10 +59,17 @@ class UserController {
             response.warning(ctx, { code: 102, message: 'Already joined the group', data: group })
           }
         } else {
-          response.warning(ctx, { code: 101, message: 'Wrong invitation code'})
+          response.warning(ctx, { code: 101, message: 'Wrong invitation code' })
         }
       }
     }
+  }
+
+  public async leaveGroup(ctx: Context) {
+    const rs = await userGroupQuery.removeAll({ user_id: ctx.user.id, group_id: ctx.params.id })
+
+    if (rs.length > 0) response.success(ctx, { data: rs[0] })
+    else response.warning(ctx, { message: 'No result' })
   }
 
   public async getFriends(ctx: Context) {

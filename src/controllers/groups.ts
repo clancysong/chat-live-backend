@@ -51,6 +51,24 @@ class GroupController {
     response.success(ctx, { data: group })
   }
 
+  public async removeGroup(ctx: Context) {
+    const { id } = ctx.params
+    const group = await groupQuery.findOne(id)
+
+    if (group.creator_id === ctx.user.id) {
+      const channels = await channelQuery.removeAll({ group_id: id })
+
+      await messageQuery.removeAllByChats('group', channels.map((c: any) => c.uuid))
+
+      await userGroupQuery.removeAll({ group_id: id })
+      await groupQuery.removeOne(id)
+
+      response.success(ctx, { data: group })
+    } else {
+      response.warning(ctx, { code: 103, message: 'Only the creator can do it' })
+    }
+  }
+
   public async fetchChannelInfo(ctx: Context) {
     const channel = await channelQuery.findByUuid(ctx.params.uuid)
 

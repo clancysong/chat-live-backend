@@ -9,6 +9,12 @@ class GroupQuery extends Query {
 
   public findByPrivateChat = (uuid: string) => this.findByChat('private_chat', uuid)
 
+  public removeAllByChats = (type: string, uuids: string[]) =>
+    this.connect()
+      .delete()
+      .whereIn('chat_uuid', uuids)
+      .andWhere({ chat_type: type })
+
   private findByChat = (type: string, uuid: string) =>
     this.connect()
       .select('message.id as id', 'creator_id', 'user.name as creator_name', 'created_at', 'content')

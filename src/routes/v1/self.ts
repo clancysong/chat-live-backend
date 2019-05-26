@@ -9,6 +9,8 @@ router.get('/groups', controller.getJoinedGroups)
 
 router.post('/groups', controller.joinGroup)
 
+router.delete('/groups/:id', controller.leaveGroup)
+
 router.get('/friends', controller.getFriends)
 
 router.delete('/friends/:id', controller.removeFriend)

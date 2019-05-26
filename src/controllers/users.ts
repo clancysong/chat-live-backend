@@ -24,17 +24,44 @@ class UserController {
   }
 
   public async joinGroup(ctx: Context) {
-    const { group_id } = ctx.request.body
-    const data = { user_id: ctx.user.id, group_id }
+    switch (ctx.query.way) {
+      case 'id': {
+        const { group_id } = ctx.request.body
+        const data = { user_id: ctx.user.id, group_id }
 
-    const existing = await userGroupQuery.findAll(data)
+        const existing = await userGroupQuery.findAll(data)
 
-    if (existing.length === 0) {
-      const rs = await userGroupQuery.addOne(data)
+        if (existing.length === 0) {
+          const rs = await userGroupQuery.addOne(data)
 
-      response.success(ctx)
-    } else {
-      response.warning(ctx, { code: 102, message: 'Already joined the group' })
+          response.success(ctx)
+        } else {
+          response.warning(ctx, { code: 102, message: 'Already joined the group' })
+        }
+
+        break
+      }
+
+      case 'invite_code': {
+        const { invite_code } = ctx.request.body
+        const group = await groupQuery.findByInviteCode(invite_code)
+
+        if (group) {
+          const data = { user_id: ctx.user.id, group_id: group.id }
+
+          const existing = await userGroupQuery.findAll(data)
+
+          if (existing.length === 0) {
+            const rs = await userGroupQuery.addOne(data)
+
+            response.success(ctx, { data: group })
+          } else {
+            response.warning(ctx, { code: 102, message: 'Already joined the group', data: group })
+          }
+        } else {
+          response.warning(ctx, { code: 101, message: 'Wrong invitation code'})
+        }
+      }
     }
   }
 

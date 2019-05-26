@@ -9,6 +9,7 @@ export async function up(knex: Knex): Promise<any> {
   table.string('cover')
   table.string('avatar')
   table.enum('type', ['public', 'private']).defaultTo('private')
+  table.string('invite_code').notNullable()
 })}
 
 export async function down(knex: Knex): Promise<any> {

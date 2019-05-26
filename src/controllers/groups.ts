@@ -19,16 +19,34 @@ class GroupController {
 
     group.members = await userQuery.findByGroup(group.id)
     group.channels = await channelQuery.findAll({ group_id: group.id })
-    // group.messages = await messageQuery.findByGroup(group.uuid)
 
     response.success(ctx, { data: group })
   }
 
   public async createPrivateGroup(ctx: Context) {
+    const getInviteCode = () => {
+      const a = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+      const codes = []
+      const count = 6
+
+      for (let i = 0; i < count; i++) {
+        codes.push(a[Math.floor(Math.random() * a.length)])
+      }
+
+      return codes.join('')
+    }
+
     const { name } = ctx.request.body
-    const [group] = await groupQuery.addOne({ uuid: getUuid(), name, creator_id: ctx.user.id, type: 'private' })
+    const [group] = await groupQuery.addOne({
+      uuid: getUuid(),
+      name,
+      creator_id: ctx.user.id,
+      type: 'private',
+      invite_code: getInviteCode()
+    })
 
     await userGroupQuery.addOne({ user_id: ctx.user.id, group_id: group.id })
+    await channelQuery.addOne({ uuid: getUuid(), name: 'general', creator_id: ctx.user.id, group_id: group.id })
 
     response.success(ctx, { data: group })
   }

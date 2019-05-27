@@ -3,6 +3,7 @@ import authRouter from './auth'
 import selfRouter from './self'
 import userRouter from './users'
 import groupRouter from './groups'
+import ossRouter from './oss'
 import response from '../../utils/response'
 import session from '../../utils/session'
 
@@ -22,5 +23,6 @@ router.use(authRouter.routes())
 router.use(selfRouter.routes())
 router.use(groupRouter.routes())
 router.use(userRouter.routes())
+router.use(ossRouter.routes())
 
 export default router

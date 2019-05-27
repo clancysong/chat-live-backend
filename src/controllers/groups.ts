@@ -7,6 +7,7 @@ import messageQuery from '../db/queries/message'
 import channelQuery from '../db/queries/channel'
 import response from '../utils/response'
 import session from '../utils/session'
+import alioss from '../utils/alioss'
 
 class GroupController {
   public async getPublicGroups(ctx: Context) {
@@ -69,6 +70,27 @@ class GroupController {
     } else {
       response.warning(ctx, { code: 103, message: 'Only the creator can do it' })
     }
+  }
+
+  public async updateGroupInfo(ctx: Context) {
+    const { id } = ctx.params
+    const { body: data } = ctx.request
+    const { avatar, cover }: any = ctx.request.files
+
+    if (avatar) {
+      const { url }: any = await alioss.put(avatar)
+
+      data.avatar = url
+    }
+    if (cover) {
+      const { url }: any = await alioss.put(cover)
+
+      data.cover = url
+    }
+
+    const [group] = await groupQuery.updateOne(id, data)
+
+    response.success(ctx, { data: group })
   }
 
   public async fetchChannelInfo(ctx: Context) {

@@ -6,6 +6,7 @@ import userGroupQuery from '../db/queries/userGroup'
 import messageQuery from '../db/queries/message'
 import channelQuery from '../db/queries/channel'
 import response from '../utils/response'
+import session from '../utils/session'
 
 class GroupController {
   public async getPublicGroups(ctx: Context) {
@@ -54,8 +55,9 @@ class GroupController {
   public async removeGroup(ctx: Context) {
     const { id } = ctx.params
     const group = await groupQuery.findOne(id)
+    const user = await session.fetch(ctx)
 
-    if (group.creator_id === ctx.user.id) {
+    if (user.permission_level >= 3 || group.creator_id === ctx.user.id) {
       const channels = await channelQuery.removeAll({ group_id: id })
 
       await messageQuery.removeAllByChats('group', channels.map((c: any) => c.uuid))

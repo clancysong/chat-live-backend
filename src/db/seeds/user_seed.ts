@@ -9,13 +9,15 @@ exports.seed = (knex: Knex) => {
           .map(i => ({
             email: `user${i}@cc.com`,
             name: `用户${i}`,
-            password: 'uu'
+            password: 'uu',
+            permission_level: 1
           }))
           .concat([
             {
               email: `admin@cc.com`,
               name: `炒鸡管理猿`,
-              password: 'admin'
+              password: 'admin',
+              permission_level: 3
             }
           ])
       )

@@ -80,8 +80,21 @@ class Ws {
 
         message.creator_name = user.name
 
-        socket.emit('MESSAGE_RECEIVE', message)
-        socket.to(roomName).emit('MESSAGE_RECEIVE', message)
+        this.io.to(roomName).emit('MESSAGE_RECEIVE', message)
+      })
+
+      socket.on('OFFER', async offer => {
+        if (chatType === 'private_chat') {
+          console.log(user.name, '连接请求')
+          socket.to(roomName).emit('OFFER', offer)
+        }
+      })
+
+      socket.on('ANSWER', async answer => {
+        if (chatType === 'private_chat') {
+          console.log(user.name, '连接回应')
+          socket.to(roomName).emit('ANSWER', answer)
+        }
       })
     })
   }

@@ -9,7 +9,8 @@ enum TABLE_NAME {
   USER_USER = 'user_user',
   FRIEND_REQUEST = 'friend_request',
   PRIVATE_CHAT = 'private_chat',
-  CHANNEL = 'channel'
+  CHANNEL = 'channel',
+  SENSITIVE_WORD = 'sensitive_word'
 }
 
 class Query {
@@ -26,7 +27,7 @@ class Query {
 
   public findByIds = (ids: number[]) => this.connect().whereIn('id', ids)
 
-  public findAll = (opts: object) => this.connect().where(opts)
+  public findAll = (opts: object = {}) => this.connect().where(opts)
 
   public addOne = (newOne: {}) =>
     this.connect()

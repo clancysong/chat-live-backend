@@ -1,25 +1,13 @@
-import Knex from 'knex'
+import * as Knex from 'knex'
 
 exports.seed = (knex: Knex) => {
-  return knex('user')
+  return knex('user_group')
     .del()
     .then(() => {
-      return knex('user').insert(
-        Array.from({ length: 3 }, (_, i) => i + 1)
-          .map(i => ({
-            email: `user${i}@cc.com`,
-            name: `用户${i}`,
-            password: 'uu',
-            permission_level: 1
-          }))
-          .concat([
-            {
-              email: `admin@cc.com`,
-              name: `炒鸡管理猿`,
-              password: 'admin',
-              permission_level: 3
-            }
-          ])
-      )
+      return knex('user_group').insert([
+        { user_id: 1, group_id: 1 },
+        { user_id: 2, group_id: 2 },
+        { user_id: 3, group_id: 3 },
+      ])
     })
 }

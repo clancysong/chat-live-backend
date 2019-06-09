@@ -5,6 +5,8 @@ const router = new Router({ prefix: '/self' })
 
 router.get('/', controller.getUserInfo)
 
+router.put('/', controller.updateUserInfo)
+
 router.get('/groups', controller.getJoinedGroups)
 
 router.post('/groups', controller.joinGroup)

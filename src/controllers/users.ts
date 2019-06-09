@@ -23,6 +23,13 @@ class UserController {
     response.success(ctx, { data: groups })
   }
 
+  public async updateUserInfo(ctx: Context) {
+    const data = ctx.request.body
+    const [user] = await userQuery.updateOne(ctx.user.id, data)
+
+    response.success(ctx, { data: user })
+  }
+
   public async joinGroup(ctx: Context) {
     switch (ctx.query.way) {
       case 'id': {

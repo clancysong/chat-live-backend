@@ -5,6 +5,7 @@ import session from '../utils/session'
 import userQuery, { Status } from '../db/queries/user'
 import groupQuery from '../db/queries/group'
 import messageQuery from '../db/queries/message'
+import wordQuery from '../db/queries/sensitiveWord'
 import User from '../models/User'
 import Group from '../models/Group'
 
@@ -77,8 +78,15 @@ class Ws {
           chat_uuid: chatUuid,
           content
         })
+        const sensitiveWords = (await wordQuery.findAll()).map((w: any) => w.content)
 
         message.creator_name = user.name
+        sensitiveWords.forEach((w: string) => {
+          const reg = new RegExp(w, 'g')
+          if (message.content.indexOf(w) > -1) {
+            message.content = message.content.replace(reg, '**')
+          }
+        })
 
         this.io.to(roomName).emit('MESSAGE_RECEIVE', message)
       })

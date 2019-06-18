@@ -5,6 +5,7 @@ import userQuery from '../db/queries/user'
 import userGroupQuery from '../db/queries/userGroup'
 import messageQuery from '../db/queries/message'
 import channelQuery from '../db/queries/channel'
+import wordQuery from '../db/queries/sensitiveWord'
 import response from '../utils/response'
 import session from '../utils/session'
 import alioss from '../utils/alioss'
@@ -95,8 +96,20 @@ class GroupController {
 
   public async fetchChannelInfo(ctx: Context) {
     const channel = await channelQuery.findByUuid(ctx.params.uuid)
+    const sensitiveWords = (await wordQuery.findAll()).map((w: any) => w.content)
 
     channel.messages = await messageQuery.findByChannel(channel.uuid)
+
+    channel.messages
+      .map((m: any) => m.content)
+      .forEach((m: any, i: number) => {
+        sensitiveWords.forEach((w: string) => {
+          const reg = new RegExp(w, 'g')
+          if (m.indexOf(w) > -1) {
+            channel.messages[i].content = m.replace(reg, '**')
+          }
+        })
+      })
 
     response.success(ctx, { data: channel })
   }

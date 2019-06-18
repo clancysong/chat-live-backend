@@ -5,6 +5,7 @@ import session from '../utils/session'
 import userQuery, { Status } from '../db/queries/user'
 import groupQuery from '../db/queries/group'
 import messageQuery from '../db/queries/message'
+import privateChatQuery from '../db/queries/privateChat'
 import wordQuery from '../db/queries/sensitiveWord'
 import User from '../models/User'
 import Group from '../models/Group'
@@ -91,10 +92,20 @@ class Ws {
         this.io.to(roomName).emit('MESSAGE_RECEIVE', message)
       })
 
-      socket.on('OFFER', async offer => {
-        if (chatType === 'private_chat') {
-          console.log(user.name, '连接请求')
-          socket.to(roomName).emit('OFFER', offer)
+      socket.on('OFFER', async ({ receiver_id, offer }) => {
+        const receiver = await userQuery.findOne(receiver_id)
+
+        if (receiver.status === 'online') {
+          const { sockets } = this.io.sockets
+
+          Object.keys(sockets).forEach(async key => {
+            const s: any = sockets[key]
+            const [chat] = await privateChatQuery.findAll({ usera_id: user.id, userb_id: receiver_id })
+
+            if (s.user.id === receiver.id) {
+              s.emit('OFFER', { sender: user, chat, offer })
+            }
+          })
         }
       })
 

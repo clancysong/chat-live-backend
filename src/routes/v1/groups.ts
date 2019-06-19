@@ -7,7 +7,7 @@ router.get('/', controller.getPublicGroups)
 
 router.get('/:uuid', controller.getGroupInfo)
 
-router.post('/', controller.createPrivateGroup)
+router.post('/', controller.createGroup)
 
 router.delete('/:id', controller.removeGroup)
 

@@ -26,7 +26,7 @@ class GroupController {
     response.success(ctx, { data: group })
   }
 
-  public async createPrivateGroup(ctx: Context) {
+  public async createGroup(ctx: Context) {
     const getInviteCode = () => {
       const a = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
       const codes = []
@@ -39,12 +39,12 @@ class GroupController {
       return codes.join('')
     }
 
-    const { name } = ctx.request.body
+    const { name, type = 'private' } = ctx.request.body
     const [group] = await groupQuery.addOne({
       uuid: getUuid(),
       name,
       creator_id: ctx.user.id,
-      type: 'private',
+      type,
       invite_code: getInviteCode()
     })
 

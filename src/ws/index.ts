@@ -106,6 +106,8 @@ class Ws {
               s.emit('OFFER', { sender: user, chat, offer })
             }
           })
+        } else {
+          socket.emit('NO_ANSWER')
         }
       })
 
@@ -114,6 +116,14 @@ class Ws {
           console.log(user.name, '连接回应')
           socket.to(roomName).emit('ANSWER', answer)
         }
+      })
+
+      socket.on('CANDIDATE', async candidate => {
+        socket.to(roomName).emit('CANDIDATE', candidate)
+      })
+
+      socket.on('HANGUP', () => {
+        socket.to(roomName).emit('HANGUP')
       })
     })
   }

@@ -130,6 +130,14 @@ class GroupController {
 
     response.success(ctx, { data: channel })
   }
+
+  public async removeMember(ctx: Context) {
+    const { groupId, userId } = ctx.params
+
+    const rs = await userGroupQuery.removeAll({ group_id: groupId, user_id: userId })
+
+    response.success(ctx, { data: rs })
+  }
 }
 
 export default new GroupController()

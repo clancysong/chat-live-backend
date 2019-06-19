@@ -19,4 +19,6 @@ router.post('/:groupId/channels', controller.createChannel)
 
 router.delete('/channels/:id', controller.removeChannel)
 
+router.delete('/:groupId/users/:userId', controller.removeMember)
+
 export default router
